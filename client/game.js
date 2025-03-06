@@ -1,4 +1,4 @@
-const socket = new WebSocket('ws://localhost:4000');
+const socket = new WebSocket(`wss://${window.location.host}`);
 let myUsername = null;
 let currentPhase = "waiting";
 
