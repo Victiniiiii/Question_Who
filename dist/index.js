@@ -37,7 +37,7 @@ const ws_1 = require("ws");
 const http = __importStar(require("http"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-const PORT = process.env.PORT || 3000;
+const PORT = 4000;
 let players = [];
 let impostorIndex;
 let gamePhase = "waiting";

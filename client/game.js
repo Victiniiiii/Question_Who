@@ -1,4 +1,4 @@
-const socket = new WebSocket("wss://spy-game.up.railway.app");
+const socket = new WebSocket('ws://localhost:4000');
 let myUsername = null;
 let currentPhase = "waiting";
 

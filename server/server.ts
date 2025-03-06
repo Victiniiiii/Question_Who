@@ -3,7 +3,7 @@ import * as http from "http";
 import * as fs from "fs";
 import * as path from "path";
 
-const PORT = process.env.PORT || 3000;
+const PORT = 4000;
 
 interface Player {
 	ws: WebSocket;
