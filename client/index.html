@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find the Impostor</title>
+</head>
+<body>
+    <h1>Find the Impostor</h1>
+    <p id="question">Waiting for question...</p>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:3000");
+
+        socket.onopen = () => {
+            console.log("Connected to game server!");
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            console.log("Received from server:", data);
+
+            if (data.type === "question") {
+                const questionElement = document.getElementById("question");
+
+                if (questionElement) {
+                    questionElement.textContent = `Your question: ${data.question}`;
+                } else {
+                    console.error("Element with ID 'question' not found!");
+                }
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        socket.onclose = () => {
+            console.log("Disconnected from server.");
+        };
+    </script>
+</body>
+</html>
