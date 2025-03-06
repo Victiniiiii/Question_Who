@@ -3,7 +3,7 @@ import * as http from "http";
 import * as fs from "fs";
 import * as path from "path";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 interface Player {
 	ws: WebSocket;
@@ -355,5 +355,5 @@ process.stdin.on("data", (input) => {
 });
 
 server.listen(PORT, () => {
-	console.log(`HTTP & WebSocket server running at http://localhost:${PORT}`);
+	console.log(`WebSocket server running on port ${PORT}`);
 });
