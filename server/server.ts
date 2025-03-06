@@ -8,9 +8,12 @@ const PORT = 3000;
 interface Player {
 	ws: WebSocket;
 	username: string | null;
+	profileImage: number | null;
+	profileDesc: string | null;
 	answer: string | null;
 	voted: boolean;
 	votedFor: string | null;
+	points: number;
 }
 
 let players: Player[] = [];
@@ -21,37 +24,39 @@ let impostorQuestion: string;
 let questionTimer: NodeJS.Timeout | null = null;
 let votingTimer: NodeJS.Timeout | null = null;
 
+const serveFile = (filePath: string, contentType: string, res: http.ServerResponse): void => {
+	fs.readFile(filePath, (err, data) => {
+		if (err) {
+			res.writeHead(500);
+			res.end(`Error loading ${filePath}`);
+		} else {
+			res.writeHead(200, { "Content-Type": contentType });
+			res.end(data);
+		}
+	});
+};
+
 const server = http.createServer((req, res) => {
-	if (req.url === "/") {
-		fs.readFile(path.join(__dirname, "../client/index.html"), (err, data) => {
-			if (err) {
-				res.writeHead(500);
-				res.end("Error loading index.html");
-			} else {
-				res.writeHead(200, { "Content-Type": "text/html" });
-				res.end(data);
-			}
-		});
-	} else if (req.url === "/style.css") {
-		fs.readFile(path.join(__dirname, "../client/style.css"), (err, data) => {
-			if (err) {
-				res.writeHead(500);
-				res.end("Error loading style.css");
-			} else {
-				res.writeHead(200, { "Content-Type": "text/css" });
-				res.end(data);
-			}
-		});
-	} else if (req.url === "/game.js") {
-		fs.readFile(path.join(__dirname, "../client/game.js"), (err, data) => {
-			if (err) {
-				res.writeHead(500);
-				res.end("Error loading game.js");
-			} else {
-				res.writeHead(200, { "Content-Type": "application/javascript" });
-				res.end(data);
-			}
-		});
+	const fileMap: { [key: string]: { path: string; contentType: string } } = {
+		"/": { path: "../client/index.html", contentType: "text/html" },
+		"/style.css": { path: "../client/style.css", contentType: "text/css" },
+		"/game.js": { path: "../client/game.js", contentType: "application/javascript" },
+	};
+
+	if (fileMap[req.url || ""]) {
+		const file = fileMap[req.url || ""];
+		serveFile(path.join(__dirname, file.path), file.contentType, res);
+	} else if (/^\/pfp\d+\.png$/.test(req.url || "")) {
+		const index = req.url?.match(/\d+/)?.[0];
+		if (index) {
+			serveFile(path.join(__dirname, `../client/pfp${index}.png`), "image/png", res);
+		} else {
+			res.writeHead(400);
+			res.end("Invalid image request");
+		}
+	} else {
+		res.writeHead(404);
+		res.end("Not Found");
 	}
 });
 
@@ -60,7 +65,10 @@ const wss = new WebSocketServer({ server });
 function broadcastPlayerList() {
 	const playersList = players.map((player) => ({
 		username: player.username,
+		profileImage: player.profileImage,
+		profileDesc: player.profileDesc,
 		answered: player.answer !== null,
+		points: player.points
 	}));
 
 	const message = JSON.stringify({
@@ -79,9 +87,12 @@ wss.on("connection", (ws) => {
 	const newPlayer: Player = {
 		ws,
 		username: null,
+		profileImage: null,
+		profileDesc: null,
 		answer: null,
 		voted: false,
 		votedFor: null,
+		points: 0
 	};
 
 	players.push(newPlayer);
@@ -95,7 +106,20 @@ wss.on("connection", (ws) => {
 
 		if (data.type === "set_username") {
 			if (data.username) {
+				// Check if username already exists in session
+				const existingPlayer = players.find(p => 
+					p !== player && 
+					p.username === data.username
+				);
+				
+				if (existingPlayer) {
+					// Take over the points of existing player with same name
+					player.points = existingPlayer.points;
+				}
+				
 				player.username = data.username;
+				player.profileImage = data.profileImage || null;
+				player.profileDesc = data.profileDesc || null;
 				console.log(`${data.username} connected! Total players: ${players.length}`);
 				ws.send(JSON.stringify({ type: "welcome", message: `Welcome ${data.username}!` }));
 				broadcastPlayerList();
@@ -159,7 +183,10 @@ function startVotingPhase() {
 		.filter((player) => player.username !== null)
 		.map((player) => ({
 			username: player.username,
+			profileImage: player.profileImage,
+			profileDesc: player.profileDesc,
 			answer: player.answer,
+			points: player.points
 		}));
 
 	const message = JSON.stringify({
@@ -191,6 +218,26 @@ function startVotingPhase() {
 	}, 1000);
 }
 
+function updatePoints(impostorWon: boolean, isTie: boolean) {
+	const readyPlayers = players.filter((player) => player.username !== null);
+	const impostor = readyPlayers[impostorIndex];
+	
+	if (impostorWon) {
+		// Impostor wins: gets 3 points
+		impostor.points += 3;
+	} else if (isTie) {
+		// Tie: impostor gets 1 point
+		impostor.points += 1;
+	} else {
+		// Impostor loses: everyone else gets 1 point
+		readyPlayers.forEach(player => {
+			if (player !== impostor) {
+				player.points += 1;
+			}
+		});
+	}
+}
+
 function endVotingPhase() {
 	gamePhase = "results";
 
@@ -198,22 +245,50 @@ function endVotingPhase() {
 		.filter((player) => player.username !== null)
 		.map((player) => ({
 			username: player.username,
+			profileImage: player.profileImage,
+			profileDesc: player.profileDesc,
 			votes: players.filter((p) => p.votedFor === player.username).length,
+			points: player.points
 		}))
 		.sort((a, b) => b.votes - a.votes);
-
+	
 	const readyPlayers = players.filter((player) => player.username !== null);
-	const impostor = readyPlayers[impostorIndex].username;
+	const impostor = readyPlayers[impostorIndex];
 
-	const message = JSON.stringify({
+	// Determine the most voted player(s)
+	const maxVotes = voteTally[0].votes;
+	const mostVotedPlayers = voteTally.filter(p => p.votes === maxVotes);
+	
+	// Check if impostor won
+	const impostorWon = mostVotedPlayers.length > 1 || 
+		(mostVotedPlayers.length === 1 && mostVotedPlayers[0].username !== impostor.username);
+	
+	// Check if there's a tie
+	const isTie = mostVotedPlayers.length > 1;
+	
+	// Update points based on game outcome
+	updatePoints(impostorWon, isTie);
+	
+	// Get updated points after they've been modified
+	const updatedVoteTally = voteTally.map(player => {
+		const currentPlayer = players.find(p => p.username === player.username);
+		return {
+			...player,
+			points: currentPlayer ? currentPlayer.points : player.points
+		};
+	});
+
+	const gameResultMessage = JSON.stringify({
 		type: "game_results",
-		voteTally,
-		impostor,
+		voteTally: updatedVoteTally,
+		impostor: impostor.username,
+		impostorWon,
+		isTie
 	});
 
 	players.forEach((player) => {
 		if (player.ws.readyState === WebSocket.OPEN) {
-			player.ws.send(message);
+			player.ws.send(gameResultMessage);
 		}
 	});
 
@@ -224,6 +299,7 @@ function endVotingPhase() {
 	});
 
 	gamePhase = "waiting";
+	broadcastPlayerList();
 
 	if (votingTimer) {
 		clearInterval(votingTimer);
