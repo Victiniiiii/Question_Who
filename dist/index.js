@@ -54,7 +54,7 @@ const ws_1 = require("ws");
 const http = __importStar(require("http"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-const PORT = process.env.PORT || 4000;
+const PORT = 3000;
 let players = [];
 let impostorIndex;
 let gamePhase = "waiting";
@@ -82,7 +82,7 @@ const server = http.createServer((req, res) => {
 	};
 	if (fileMap[req.url || ""]) {
 		const file = fileMap[req.url || ""];
-		serveFile(path.join(__dirname, file.path), file.contentType, res);
+		serveFile(file.path, file.contentType, res);
 	} else if (/^\/pfp\d+\.png$/.test(req.url || "")) {
 		const index = (_b = (_a = req.url) === null || _a === void 0 ? void 0 : _a.match(/\d+/)) === null || _b === void 0 ? void 0 : _b[0];
 		if (index) {
