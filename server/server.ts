@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 const PORT = 3000;
-let players: WebSocket[] = [];
+let players: { ws: WebSocket, username: string | null }[] = [];
 let impostorIndex: number;
 
 const server = http.createServer((req, res) => {
@@ -24,13 +24,23 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocketServer({ server });
 
 wss.on("connection", (ws) => {
-    players.push(ws);
-    console.log(`Player connected! Total players: ${players.length}`);
+    players.push({ ws, username: null });
+    ws.send(JSON.stringify({ type: "username_prompt", message: "Please enter your username:" }));
+    ws.on("message", (message) => {
+        const data = JSON.parse(message.toString());
 
-    ws.send(JSON.stringify({ type: "welcome", message: "Welcome to the game!" }));
+        if (data.type === "set_username") {
+            const player = players.find(player => player.ws === ws);
+            if (player && data.username) {
+                player.username = data.username;
+                console.log(`${data.username} connected! Total players: ${players.length}`);
+                ws.send(JSON.stringify({ type: "welcome", message: `Welcome ${data.username}!` }));
+            }
+        }
+    });
 
     ws.on("close", () => {
-        players = players.filter((player) => player !== ws);
+        players = players.filter((player) => player.ws !== ws);
         console.log(`Player disconnected. Remaining players: ${players.length}`);
     });
 
@@ -40,19 +50,21 @@ wss.on("connection", (ws) => {
 });
 
 function startGame(commonQuestion: string, impostorQuestion: string) {
-    if (players.length < 2) {
-        console.log("Not enough players to start the game!");
+    const readyPlayers = players.filter(player => player.username);
+    if (readyPlayers.length < 2) {
+        console.log("Not enough players with usernames to start the game!");
         return;
     }
 
-    impostorIndex = Math.floor(Math.random() * players.length);
+    impostorIndex = Math.floor(Math.random() * readyPlayers.length);
 
-    players.forEach((player, index) => {
+    readyPlayers.forEach((player, index) => {
         const question = index === impostorIndex ? impostorQuestion : commonQuestion;
-        player.send(JSON.stringify({ type: "question", question }));
+        player.ws.send(JSON.stringify({ type: "question", question }));
     });
 
-    console.log(`Game started! The impostor is player #${impostorIndex + 1}`);
+    const impostorUsername = readyPlayers[impostorIndex].username;
+    console.log(`Game started! The impostor is ${impostorUsername}, player #${impostorIndex + 1}`);
 }
 
 process.stdin.on("data", (input) => {

@@ -20,6 +20,13 @@
             const data = JSON.parse(event.data);
             console.log("Received from server:", data);
 
+            if (data.type === "username_prompt") {
+                const username = prompt(data.message);
+                if (username) {
+                    socket.send(JSON.stringify({ type: "set_username", username: username }));
+                }
+            }
+
             if (data.type === "question") {
                 const questionElement = document.getElementById("question");
 
