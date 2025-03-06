@@ -23,9 +23,21 @@ const server = http.createServer((req, res) => {
 
 const wss = new WebSocketServer({ server });
 
+function broadcastPlayerList() {
+    const playerList = players.map(player => player.username).filter(username => username !== null);
+    const message = JSON.stringify({ type: "update_player_list", playerList });
+    
+    players.forEach(player => {
+        player.ws.send(message);
+    });
+}
+
 wss.on("connection", (ws) => {
     players.push({ ws, username: null });
     ws.send(JSON.stringify({ type: "username_prompt", message: "Please enter your username:" }));
+    
+    broadcastPlayerList();
+
     ws.on("message", (message) => {
         const data = JSON.parse(message.toString());
 
@@ -35,6 +47,8 @@ wss.on("connection", (ws) => {
                 player.username = data.username;
                 console.log(`${data.username} connected! Total players: ${players.length}`);
                 ws.send(JSON.stringify({ type: "welcome", message: `Welcome ${data.username}!` }));
+                
+                broadcastPlayerList();
             }
         }
     });
@@ -42,6 +56,8 @@ wss.on("connection", (ws) => {
     ws.on("close", () => {
         players = players.filter((player) => player.ws !== ws);
         console.log(`Player disconnected. Remaining players: ${players.length}`);
+        
+        broadcastPlayerList();
     });
 
     ws.on("error", (err) => {

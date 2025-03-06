@@ -8,6 +8,8 @@
 <body>
     <h1>Find the Impostor</h1>
     <p id="question">Waiting for question...</p>
+    <h2>Player List</h2>
+    <ul id="playerList"></ul>
 
     <script>
         const socket = new WebSocket("ws://localhost:3000");
@@ -29,11 +31,24 @@
 
             if (data.type === "question") {
                 const questionElement = document.getElementById("question");
-
                 if (questionElement) {
                     questionElement.textContent = `Your question: ${data.question}`;
                 } else {
                     console.error("Element with ID 'question' not found!");
+                }
+            }
+
+            if (data.type === "update_player_list") {
+                const playerListElement = document.getElementById("playerList");
+                if (playerListElement) {
+                    playerListElement.innerHTML = "";  // Clear the list before re-populating
+                    data.playerList.forEach(username => {
+                        const listItem = document.createElement("li");
+                        listItem.textContent = username;
+                        playerListElement.appendChild(listItem);
+                    });
+                } else {
+                    console.error("Element with ID 'playerList' not found!");
                 }
             }
         };
