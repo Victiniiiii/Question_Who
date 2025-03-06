@@ -13,34 +13,34 @@
 }
 
 .pfp-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
 }
 
 .pfp-container img {
-    width: 200px;
-    height: 200px;
-    border-radius: 10%;
-    border: 1px solid black;
+	width: 200px;
+	height: 200px;
+	border-radius: 10%;
+	border: 1px solid black;
 }
 
 .description {
-    font-size: 1.2em;
-    margin-top: 10px;
+	font-size: 1.2em;
+	margin-top: 10px;
 }
 
 .arrows {
-    display: flex;
-    justify-content: space-between;
-    width: 100px;
-    margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+	width: 100px;
+	margin-top: 20px;
 }
 
 .arrows button {
-    font-size: 1.5em;
-    padding: 10px;
-    cursor: pointer;
+	font-size: 1.5em;
+	padding: 10px;
+	cursor: pointer;
 }

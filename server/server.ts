@@ -68,7 +68,7 @@ function broadcastPlayerList() {
 		profileImage: player.profileImage,
 		profileDesc: player.profileDesc,
 		answered: player.answer !== null,
-		points: player.points
+		points: player.points,
 	}));
 
 	const message = JSON.stringify({
@@ -92,7 +92,7 @@ wss.on("connection", (ws) => {
 		answer: null,
 		voted: false,
 		votedFor: null,
-		points: 0
+		points: 0,
 	};
 
 	players.push(newPlayer);
@@ -106,17 +106,12 @@ wss.on("connection", (ws) => {
 
 		if (data.type === "set_username") {
 			if (data.username) {
-				// Check if username already exists in session
-				const existingPlayer = players.find(p => 
-					p !== player && 
-					p.username === data.username
-				);
-				
+				const existingPlayer = players.find((p) => p !== player && p.username === data.username);
+
 				if (existingPlayer) {
-					// Take over the points of existing player with same name
 					player.points = existingPlayer.points;
 				}
-				
+
 				player.username = data.username;
 				player.profileImage = data.profileImage || null;
 				player.profileDesc = data.profileDesc || null;
@@ -186,7 +181,7 @@ function startVotingPhase() {
 			profileImage: player.profileImage,
 			profileDesc: player.profileDesc,
 			answer: player.answer,
-			points: player.points
+			points: player.points,
 		}));
 
 	const message = JSON.stringify({
@@ -221,16 +216,13 @@ function startVotingPhase() {
 function updatePoints(impostorWon: boolean, isTie: boolean) {
 	const readyPlayers = players.filter((player) => player.username !== null);
 	const impostor = readyPlayers[impostorIndex];
-	
+
 	if (impostorWon) {
-		// Impostor wins: gets 3 points
 		impostor.points += 3;
 	} else if (isTie) {
-		// Tie: impostor gets 1 point
 		impostor.points += 1;
 	} else {
-		// Impostor loses: everyone else gets 1 point
-		readyPlayers.forEach(player => {
+		readyPlayers.forEach((player) => {
 			if (player !== impostor) {
 				player.points += 1;
 			}
@@ -248,33 +240,27 @@ function endVotingPhase() {
 			profileImage: player.profileImage,
 			profileDesc: player.profileDesc,
 			votes: players.filter((p) => p.votedFor === player.username).length,
-			points: player.points
+			points: player.points,
 		}))
 		.sort((a, b) => b.votes - a.votes);
-	
+
 	const readyPlayers = players.filter((player) => player.username !== null);
 	const impostor = readyPlayers[impostorIndex];
 
-	// Determine the most voted player(s)
 	const maxVotes = voteTally[0].votes;
-	const mostVotedPlayers = voteTally.filter(p => p.votes === maxVotes);
-	
-	// Check if impostor won
-	const impostorWon = mostVotedPlayers.length > 1 || 
-		(mostVotedPlayers.length === 1 && mostVotedPlayers[0].username !== impostor.username);
-	
-	// Check if there's a tie
+	const mostVotedPlayers = voteTally.filter((p) => p.votes === maxVotes);
+
+	const impostorWon = mostVotedPlayers.length > 1 || (mostVotedPlayers.length === 1 && mostVotedPlayers[0].username !== impostor.username);
+
 	const isTie = mostVotedPlayers.length > 1;
-	
-	// Update points based on game outcome
+
 	updatePoints(impostorWon, isTie);
-	
-	// Get updated points after they've been modified
-	const updatedVoteTally = voteTally.map(player => {
-		const currentPlayer = players.find(p => p.username === player.username);
+
+	const updatedVoteTally = voteTally.map((player) => {
+		const currentPlayer = players.find((p) => p.username === player.username);
 		return {
 			...player,
-			points: currentPlayer ? currentPlayer.points : player.points
+			points: currentPlayer ? currentPlayer.points : player.points,
 		};
 	});
 
@@ -283,7 +269,7 @@ function endVotingPhase() {
 		voteTally: updatedVoteTally,
 		impostor: impostor.username,
 		impostorWon,
-		isTie
+		isTie,
 	});
 
 	players.forEach((player) => {

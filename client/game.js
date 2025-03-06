@@ -24,12 +24,14 @@ submitUsername.addEventListener("click", () => {
 	const username = usernameInput.value.trim();
 	if (username) {
 		myUsername = username;
-		socket.send(JSON.stringify({ 
-			type: "set_username", 
-			username,
-			profileImage: currentPfpIndex,
-			profileDesc: descriptions[currentPfpIndex - 1]
-		}));
+		socket.send(
+			JSON.stringify({
+				type: "set_username",
+				username,
+				profileImage: currentPfpIndex,
+				profileDesc: descriptions[currentPfpIndex - 1],
+			})
+		);
 
 		usernameScreen.classList.add("hidden");
 		gameContainer.classList.remove("hidden");
@@ -55,8 +57,7 @@ socket.onmessage = (event) => {
 		playerList.innerHTML = "";
 		data.playerList.forEach((player) => {
 			const listItem = document.createElement("li");
-			
-			// Create and append profile image
+
 			if (player.profileImage) {
 				const img = document.createElement("img");
 				img.src = `pfp${player.profileImage}.png`;
@@ -64,23 +65,22 @@ socket.onmessage = (event) => {
 				img.classList.add("player-pfp");
 				listItem.appendChild(img);
 			}
-			
-			// Create and append username and points
+
 			const playerInfo = document.createElement("div");
 			playerInfo.classList.add("player-info");
-			
+
 			const usernameSpan = document.createElement("span");
 			usernameSpan.textContent = player.username;
 			if (player.answered) {
 				usernameSpan.textContent += " ✓";
 			}
 			playerInfo.appendChild(usernameSpan);
-			
+
 			const pointsSpan = document.createElement("span");
 			pointsSpan.textContent = `${player.points} points`;
 			pointsSpan.classList.add("player-points");
 			playerInfo.appendChild(pointsSpan);
-			
+
 			listItem.appendChild(playerInfo);
 			playerList.appendChild(listItem);
 		});
@@ -98,8 +98,7 @@ socket.onmessage = (event) => {
 			if (player.username !== myUsername) {
 				const voteContainer = document.createElement("div");
 				voteContainer.classList.add("vote-option");
-				
-				// Add profile image to voting options
+
 				if (player.profileImage) {
 					const img = document.createElement("img");
 					img.src = `pfp${player.profileImage}.png`;
@@ -107,10 +106,10 @@ socket.onmessage = (event) => {
 					img.classList.add("vote-pfp");
 					voteContainer.appendChild(img);
 				}
-				
+
 				const voteInfo = document.createElement("div");
 				voteInfo.classList.add("vote-info");
-				
+
 				const voteButton = document.createElement("button");
 				voteButton.textContent = `${player.username}: ${player.answer || "[No answer]"}`;
 				voteButton.classList.add("vote-button");
@@ -126,12 +125,12 @@ socket.onmessage = (event) => {
 					});
 				});
 				voteInfo.appendChild(voteButton);
-				
+
 				const pointsSpan = document.createElement("span");
 				pointsSpan.textContent = `${player.points} points`;
 				pointsSpan.classList.add("vote-points");
 				voteInfo.appendChild(pointsSpan);
-				
+
 				voteContainer.appendChild(voteInfo);
 				votingOptions.appendChild(voteContainer);
 			}
@@ -146,8 +145,7 @@ socket.onmessage = (event) => {
 	} else if (data.type === "game_results") {
 		updatePhase("results");
 		voteResults.innerHTML = "";
-		
-		// Create and display game outcome message
+
 		if (gameOutcome) {
 			if (data.isTie) {
 				gameOutcome.textContent = "It's a tie! The impostor earns 1 point.";
@@ -162,8 +160,7 @@ socket.onmessage = (event) => {
 		data.voteTally.forEach((result) => {
 			const resultItem = document.createElement("div");
 			resultItem.classList.add("result-item");
-			
-			// Add profile image to results
+
 			if (result.profileImage) {
 				const img = document.createElement("img");
 				img.src = `pfp${result.profileImage}.png`;
@@ -171,26 +168,25 @@ socket.onmessage = (event) => {
 				img.classList.add("result-pfp");
 				resultItem.appendChild(img);
 			}
-			
+
 			const resultInfo = document.createElement("div");
 			resultInfo.classList.add("result-info");
-			
+
 			const resultText = document.createElement("p");
 			resultText.textContent = `${result.username}: ${result.votes} votes`;
 			resultInfo.appendChild(resultText);
-			
+
 			const resultPoints = document.createElement("p");
 			resultPoints.textContent = `${result.points} points`;
 			resultPoints.classList.add("result-points");
 			resultInfo.appendChild(resultPoints);
-			
+
 			resultItem.appendChild(resultInfo);
 			voteResults.appendChild(resultItem);
 		});
 
 		impostorReveal.textContent = `The impostor was: ${data.impostor}`;
-		
-		// Highlight the impostor in the results
+
 		const impostorItem = document.querySelector(`.result-item:has(.result-info p:contains('${data.impostor}'))`);
 		if (impostorItem) {
 			impostorItem.classList.add("impostor-result");
@@ -204,7 +200,7 @@ function updatePhase(newPhase) {
 	questionPhase.classList.add("hidden");
 	votingPhase.classList.add("hidden");
 	resultsPhase.classList.add("hidden");
-	
+
 	if (gameOutcome) {
 		gameOutcome.classList.add("hidden");
 	}
@@ -225,25 +221,7 @@ function updatePhase(newPhase) {
 
 let currentPfpIndex = 1;
 
-const descriptions = [
-	"Kedi",
-	"Tahta bloğu",
-	"Tarator",
-	"Ağaç",
-	"Havalı H Harfi",
-	"Kolonya",
-	"Uganda",
-	"👌",
-	"Sasalı",
-	"😉",
-	"😔",
-	"Navy Seal",
-	"Kağıt Uçak",
-	"Sandviç",
-	"İzban",
-	"Erasmus",
-	"Veri Tabanı",
-];
+const descriptions = ["Kedi", "Tahta bloğu", "Tarator", "Ağaç", "Havalı H Harfi", "Kolonya", "Uganda", "👌", "Sasalı", "😉", "😔", "Navy Seal", "Kağıt Uçak", "Sandviç", "İzban", "Erasmus", "Veri Tabanı"];
 
 const pfpCount = descriptions.length;
 const pfpImage = document.getElementById("pfp");
