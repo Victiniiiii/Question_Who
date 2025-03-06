@@ -1,0 +1,13 @@
+.timer {
+	font-weight: bold;
+	color: red;
+}
+
+.hidden {
+	display: none;
+}
+
+.vote-button {
+	margin: 5px;
+	padding: 5px 10px;
+}
