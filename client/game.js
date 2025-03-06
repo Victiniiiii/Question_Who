@@ -10,7 +10,6 @@ const timer = document.getElementById("timer");
 const gamePhase = document.getElementById("gamePhase");
 const questionPhase = document.getElementById("questionPhase");
 const votingPhase = document.getElementById("votingPhase");
-const votingOptions = document.getElementById("votingOptions");
 const resultsPhase = document.getElementById("resultsPhase");
 const voteResults = document.getElementById("voteResults");
 const impostorReveal = document.getElementById("impostorReveal");
@@ -30,26 +29,6 @@ function updatePhase(phase) {
     } else if (phase === "results") {
         resultsPhase.classList.remove("hidden");
     }
-}
-
-function startTimer(seconds) {
-    let timeLeft = seconds;
-    timer.textContent = `Time remaining: ${timeLeft} seconds`;
-
-    const timerInterval = setInterval(() => {
-        timeLeft--;
-        timer.textContent = `Time remaining: ${timeLeft} seconds`;
-
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            timer.textContent = "Time's up!";
-
-            if (currentPhase === "question" && !submitAnswer.disabled) {
-                socket.send(JSON.stringify({ type: "submit_answer", answer: "" }));
-                submitAnswer.disabled = true;
-            }
-        }
-    }, 1000);
 }
 
 submitAnswer.addEventListener("click", () => {
@@ -88,7 +67,6 @@ socket.onmessage = (event) => {
         question.textContent = `Your question: ${data.question}`;
         answer.disabled = false;
         submitAnswer.disabled = false;
-        startTimer(60);
     } else if (data.type === "start_voting") {
         updatePhase("voting");
         votingOptions.innerHTML = "";
@@ -113,8 +91,8 @@ socket.onmessage = (event) => {
                 votingOptions.appendChild(voteButton);
             }
         });
-
-        startTimer(60);
+    } else if (data.type === "time_remaining") {
+        timer.textContent = `Time remaining: ${data.remainingTime} seconds`;
     } else if (data.type === "game_results") {
         updatePhase("results");
         voteResults.innerHTML = "";
