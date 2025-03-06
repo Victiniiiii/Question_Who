@@ -8,28 +8,37 @@
 	</head>
 	<body>
 		<h1>Find the Impostor</h1>
-		<div id="gamePhase">Waiting for players...</div>
-		<div id="timer" class="timer"></div>
 
-		<div id="questionPhase" class="hidden">
-			<p id="question">Waiting for question...</p>
-			<textarea id="answer" placeholder="Type your answer here"></textarea>
-			<button id="submitAnswer">Submit Answer</button>
+		<div id="usernameScreen">
+			<h2>Enter your username:</h2>
+			<input type="text" id="usernameInput" placeholder="Your username" />
+			<button id="submitUsername">Join Game</button>
 		</div>
 
-		<div id="votingPhase" class="hidden">
-			<h2>Vote for who you think has a different question:</h2>
-			<div id="votingOptions"></div>
-		</div>
+		<div id="gameContainer" class="hidden">
+			<div id="gamePhase">Waiting for players...</div>
+			<div id="timer" class="timer"></div>
 
-		<div id="resultsPhase" class="hidden">
-			<h2>Results:</h2>
-			<div id="voteResults"></div>
-			<p id="impostorReveal"></p>
-		</div>
+			<div id="questionPhase" class="hidden">
+				<p id="question">Waiting for question...</p>
+				<textarea id="answer" placeholder="Type your answer here"></textarea>
+				<button id="submitAnswer">Submit Answer</button>
+			</div>
 
-		<h2>Players</h2>
-		<ul id="playerList"></ul>
+			<div id="votingPhase" class="hidden">
+				<h2>Vote for who you think has a different question:</h2>
+				<div id="votingOptions"></div>
+			</div>
+
+			<div id="resultsPhase" class="hidden">
+				<h2>Results:</h2>
+				<div id="voteResults"></div>
+				<p id="impostorReveal"></p>
+			</div>
+
+			<h2>Players</h2>
+			<ul id="playerList"></ul>
+		</div>
 
 		<script src="game.js"></script>
 	</body>
