@@ -37,7 +37,7 @@ const ws_1 = require("ws");
 const http = __importStar(require("http"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 let players = [];
 let impostorIndex;
 let gamePhase = "waiting";
@@ -330,5 +330,5 @@ process.stdin.on("data", (input) => {
     }
 });
 server.listen(PORT, () => {
-    console.log(`HTTP & WebSocket server running at http://localhost:${PORT}`);
+	console.log(`WebSocket server running on port ${PORT}`);
 });
