@@ -295,7 +295,7 @@ function endVotingPhase() {
 
 function startGame(common: string, impostor: string) {
 	const readyPlayers = players.filter((player) => player.username);
-	if (readyPlayers.length < 2) {
+	if (readyPlayers.length < 3) {
 		console.log("Not enough players with usernames to start the game!");
 		return;
 	}
