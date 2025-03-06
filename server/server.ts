@@ -38,9 +38,9 @@ const serveFile = (filePath: string, contentType: string, res: http.ServerRespon
 
 const server = http.createServer((req, res) => {
 	const fileMap: { [key: string]: { path: string; contentType: string } } = {
-		"/": { path: "../client/index.html", contentType: "text/html" },
-		"/style.css": { path: "../client/style.css", contentType: "text/css" },
-		"/game.js": { path: "../client/game.js", contentType: "application/javascript" },
+		"/": { path: path.join(__dirname, "../client/index.html"), contentType: "text/html" },
+		"/style.css": { path: path.join(__dirname, "../client/style.css"), contentType: "text/css" },
+		"/game.js": { path: path.join(__dirname, "../client/game.js"), contentType: "application/javascript" },
 	};
 
 	if (fileMap[req.url || ""]) {
@@ -84,20 +84,20 @@ function broadcastPlayerList() {
 }
 
 function kickPlayer(username: string): boolean {
-	const playerIndex = players.findIndex(p => p.username === username);
+	const playerIndex = players.findIndex((p) => p.username === username);
 	if (playerIndex === -1) {
 		console.log(`Player ${username} not found`);
 		return false;
 	}
-	
+
 	const player = players[playerIndex];
 	console.log(`Kicking player: ${username}`);
-	
+
 	if (player.ws.readyState === WebSocket.OPEN) {
 		player.ws.send(JSON.stringify({ type: "kicked", message: "You have been kicked from the game" }));
 		player.ws.close();
 	}
-	
+
 	players.splice(playerIndex, 1);
 	broadcastPlayerList();
 	return true;
@@ -147,18 +147,20 @@ function startGame(common: string, impostor: string) {
 			startVotingPhase();
 		}
 	}, 1000);
-	
+
 	return true;
 }
 
 function listPlayers(): void {
 	console.log("Connected players:");
-	console.table(players.map(p => ({
-		username: p.username || "Anonymous",
-		profileImage: p.profileImage,
-		points: p.points,
-		status: p.answer !== null ? "Answered" : "Waiting"
-	})));
+	console.table(
+		players.map((p) => ({
+			username: p.username || "Anonymous",
+			profileImage: p.profileImage,
+			points: p.points,
+			status: p.answer !== null ? "Answered" : "Waiting",
+		}))
+	);
 }
 
 function resetGame(): void {
@@ -166,18 +168,18 @@ function resetGame(): void {
 		clearInterval(questionTimer);
 		questionTimer = null;
 	}
-	
+
 	if (votingTimer) {
 		clearInterval(votingTimer);
 		votingTimer = null;
 	}
-	
+
 	players.forEach((player) => {
 		player.answer = null;
 		player.voted = false;
 		player.votedFor = null;
 	});
-	
+
 	gamePhase = "waiting";
 	console.log("Game reset to waiting state");
 	broadcastPlayerList();
