@@ -4,59 +4,191 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find the Impostor</title>
+    <style>
+        .timer {
+            font-weight: bold;
+            color: red;
+        }
+        .hidden {
+            display: none;
+        }
+        .vote-button {
+            margin: 5px;
+            padding: 5px 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Find the Impostor</h1>
-    <p id="question">Waiting for question...</p>
-    <h2>Player List</h2>
+    <div id="gamePhase">Waiting for players...</div>
+    <div id="timer" class="timer"></div>
+    
+    <div id="questionPhase" class="hidden">
+        <p id="question">Waiting for question...</p>
+        <textarea id="answer" placeholder="Type your answer here"></textarea>
+        <button id="submitAnswer">Submit Answer</button>
+    </div>
+    
+    <div id="votingPhase" class="hidden">
+        <h2>Vote for who you think has a different question:</h2>
+        <div id="votingOptions"></div>
+    </div>
+    
+    <div id="resultsPhase" class="hidden">
+        <h2>Results:</h2>
+        <div id="voteResults"></div>
+        <p id="impostorReveal"></p>
+    </div>
+    
+    <h2>Players</h2>
     <ul id="playerList"></ul>
-
+    
     <script>
         const socket = new WebSocket("ws://localhost:3000");
-
+        let myUsername = null;
+        let currentPhase = "waiting";
+        
+        const elements = {
+            question: document.getElementById("question"),
+            answer: document.getElementById("answer"),
+            submitAnswer: document.getElementById("submitAnswer"),
+            playerList: document.getElementById("playerList"),
+            timer: document.getElementById("timer"),
+            gamePhase: document.getElementById("gamePhase"),
+            questionPhase: document.getElementById("questionPhase"),
+            votingPhase: document.getElementById("votingPhase"),
+            votingOptions: document.getElementById("votingOptions"),
+            resultsPhase: document.getElementById("resultsPhase"),
+            voteResults: document.getElementById("voteResults"),
+            impostorReveal: document.getElementById("impostorReveal")
+        };
+        
+        function updatePhase(phase) {
+            currentPhase = phase;
+            elements.gamePhase.textContent = phase.charAt(0).toUpperCase() + phase.slice(1) + " Phase";
+            
+            elements.questionPhase.classList.add("hidden");
+            elements.votingPhase.classList.add("hidden");
+            elements.resultsPhase.classList.add("hidden");
+            
+            if (phase === "question") {
+                elements.questionPhase.classList.remove("hidden");
+            } else if (phase === "voting") {
+                elements.votingPhase.classList.remove("hidden");
+            } else if (phase === "results") {
+                elements.resultsPhase.classList.remove("hidden");
+            }
+        }
+        
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            elements.timer.textContent = `Time remaining: ${timeLeft} seconds`;
+            
+            const timerInterval = setInterval(() => {
+                timeLeft--;
+                elements.timer.textContent = `Time remaining: ${timeLeft} seconds`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    elements.timer.textContent = "Time's up!";
+                    
+                    if (currentPhase === "question" && !elements.submitAnswer.disabled) {
+                        socket.send(JSON.stringify({ type: "submit_answer", answer: "" }));
+                        elements.submitAnswer.disabled = true;
+                    }
+                }
+            }, 1000);
+        }
+        
+        elements.submitAnswer.addEventListener("click", () => {
+            const answer = elements.answer.value.trim();
+            socket.send(JSON.stringify({ type: "submit_answer", answer }));
+            elements.submitAnswer.disabled = true;
+            elements.answer.disabled = true;
+        });
+        
         socket.onopen = () => {
             console.log("Connected to game server!");
         };
-
+        
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             console.log("Received from server:", data);
-
-            if (data.type === "username_prompt") {
-                const username = prompt(data.message);
-                if (username) {
-                    socket.send(JSON.stringify({ type: "set_username", username: username }));
-                }
-            }
-
-            if (data.type === "question") {
-                const questionElement = document.getElementById("question");
-                if (questionElement) {
-                    questionElement.textContent = `Your question: ${data.question}`;
-                } else {
-                    console.error("Element with ID 'question' not found!");
-                }
-            }
-
-            if (data.type === "update_player_list") {
-                const playerListElement = document.getElementById("playerList");
-                if (playerListElement) {
-                    playerListElement.innerHTML = "";  // Clear the list before re-populating
-                    data.playerList.forEach(username => {
+            
+            switch (data.type) {
+                case "username_prompt":
+                    const username = prompt(data.message);
+                    if (username) {
+                        myUsername = username;
+                        socket.send(JSON.stringify({ type: "set_username", username }));
+                    }
+                    break;
+                
+                case "update_player_list":
+                    elements.playerList.innerHTML = "";
+                    data.playerList.forEach(player => {
                         const listItem = document.createElement("li");
-                        listItem.textContent = username;
-                        playerListElement.appendChild(listItem);
+                        listItem.textContent = player.username;
+                        if (player.answered) {
+                            listItem.textContent += " ✓";
+                        }
+                        elements.playerList.appendChild(listItem);
                     });
-                } else {
-                    console.error("Element with ID 'playerList' not found!");
-                }
+                    break;
+                
+                case "question":
+                    updatePhase("question");
+                    elements.question.textContent = `Your question: ${data.question}`;
+                    elements.answer.disabled = false;
+                    elements.submitAnswer.disabled = false;
+                    startTimer(60);
+                    break;
+                
+                case "start_voting":
+                    updatePhase("voting");
+                    elements.votingOptions.innerHTML = "";
+                    
+                    data.players.forEach(player => {
+                        if (player.username !== myUsername) {
+                            const voteButton = document.createElement("button");
+                            voteButton.textContent = `${player.username}: ${player.answer || "[No answer]"}`;
+                            voteButton.classList.add("vote-button");
+                            voteButton.addEventListener("click", () => {
+                                socket.send(JSON.stringify({ 
+                                    type: "submit_vote", 
+                                    vote: player.username 
+                                }));
+                                
+                                document.querySelectorAll(".vote-button").forEach(btn => {
+                                    btn.disabled = true;
+                                });
+                            });
+                            elements.votingOptions.appendChild(voteButton);
+                        }
+                    });
+                    
+                    startTimer(60);
+                    break;
+                
+                case "game_results":
+                    updatePhase("results");
+                    elements.voteResults.innerHTML = "";
+                    
+                    data.voteTally.forEach(result => {
+                        const resultItem = document.createElement("p");
+                        resultItem.textContent = `${result.username}: ${result.votes} votes`;
+                        elements.voteResults.appendChild(resultItem);
+                    });
+                    
+                    elements.impostorReveal.textContent = `The impostor was: ${data.impostor}`;
+                    break;
             }
         };
-
+        
         socket.onerror = (error) => {
             console.error("WebSocket error:", error);
         };
-
+        
         socket.onclose = () => {
             console.log("Disconnected from server.");
         };
