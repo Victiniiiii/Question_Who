@@ -244,3 +244,53 @@ document.getElementById("right-arrow").addEventListener("click", () => {
 });
 
 updatePfp();
+
+function startGame(commonQuestion, impostorQuestion) {
+	socket.send(
+		JSON.stringify({
+			type: "admin_command",
+			command: "startGame",
+			commonQuestion: commonQuestion,
+			impostorQuestion: impostorQuestion,
+		})
+	);
+	console.log("Sent start game command!");
+}
+
+function kickPlayer(username) {
+	socket.send(
+		JSON.stringify({
+			type: "admin_command",
+			command: "kickPlayer",
+			username: username,
+		})
+	);
+	console.log(`Sent kick command for player: ${username}`);
+}
+
+function listPlayers() {
+	socket.send(
+		JSON.stringify({
+			type: "admin_command",
+			command: "listPlayers",
+		})
+	);
+	console.log("Requested player list from server");
+}
+
+function resetGame() {
+	socket.send(
+		JSON.stringify({
+			type: "admin_command",
+			command: "resetGame",
+		})
+	);
+	console.log("Sent reset game command");
+}
+
+console.log("Commands: startGame(), kickPlayer(), listPlayers(), resetGame().");
+
+window.startGame = startGame;
+window.kickPlayer = kickPlayer;
+window.listPlayers = listPlayers;
+window.resetGame = resetGame;
