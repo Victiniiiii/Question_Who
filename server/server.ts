@@ -3,7 +3,7 @@ import * as http from "http";
 import * as fs from "fs";
 import * as path from "path";
 
-const PORT = 4000;
+const PORT = 3000;
 
 interface Player {
 	ws: WebSocket;
@@ -45,7 +45,7 @@ const server = http.createServer((req, res) => {
 
 	if (fileMap[req.url || ""]) {
 		const file = fileMap[req.url || ""];
-		serveFile(path.join(__dirname, file.path), file.contentType, res);
+		serveFile(file.path, file.contentType, res);
 	} else if (/^\/pfp\d+\.png$/.test(req.url || "")) {
 		const index = req.url?.match(/\d+/)?.[0];
 		if (index) {
@@ -81,6 +81,106 @@ function broadcastPlayerList() {
 			player.ws.send(message);
 		}
 	});
+}
+
+function kickPlayer(username: string): boolean {
+	const playerIndex = players.findIndex(p => p.username === username);
+	if (playerIndex === -1) {
+		console.log(`Player ${username} not found`);
+		return false;
+	}
+	
+	const player = players[playerIndex];
+	console.log(`Kicking player: ${username}`);
+	
+	if (player.ws.readyState === WebSocket.OPEN) {
+		player.ws.send(JSON.stringify({ type: "kicked", message: "You have been kicked from the game" }));
+		player.ws.close();
+	}
+	
+	players.splice(playerIndex, 1);
+	broadcastPlayerList();
+	return true;
+}
+
+function startGame(common: string, impostor: string) {
+	const readyPlayers = players.filter((player) => player.username);
+	if (readyPlayers.length < 3) {
+		console.log("Not enough players with usernames to start the game!");
+		return false;
+	}
+
+	gamePhase = "question";
+	commonQuestion = common;
+	impostorQuestion = impostor;
+	impostorIndex = Math.floor(Math.random() * readyPlayers.length);
+
+	players.forEach((player) => {
+		player.answer = null;
+		player.voted = false;
+		player.votedFor = null;
+	});
+
+	readyPlayers.forEach((player, index) => {
+		const question = index === impostorIndex ? impostorQuestion : commonQuestion;
+		if (player.ws.readyState === WebSocket.OPEN) {
+			player.ws.send(JSON.stringify({ type: "question", question }));
+		}
+	});
+
+	const impostorUsername = readyPlayers[impostorIndex].username;
+	console.log(`Game started! Impostor is: ${impostorUsername}`);
+
+	let remainingTime = 60;
+
+	if (votingTimer) {
+		clearInterval(votingTimer);
+		votingTimer = null;
+	}
+
+	questionTimer = setInterval(() => {
+		sendTimeRemaining(remainingTime);
+		remainingTime--;
+		if (remainingTime <= 0) {
+			clearInterval(questionTimer as NodeJS.Timeout);
+			questionTimer = null;
+			startVotingPhase();
+		}
+	}, 1000);
+	
+	return true;
+}
+
+function listPlayers(): void {
+	console.log("Connected players:");
+	console.table(players.map(p => ({
+		username: p.username || "Anonymous",
+		profileImage: p.profileImage,
+		points: p.points,
+		status: p.answer !== null ? "Answered" : "Waiting"
+	})));
+}
+
+function resetGame(): void {
+	if (questionTimer) {
+		clearInterval(questionTimer);
+		questionTimer = null;
+	}
+	
+	if (votingTimer) {
+		clearInterval(votingTimer);
+		votingTimer = null;
+	}
+	
+	players.forEach((player) => {
+		player.answer = null;
+		player.voted = false;
+		player.votedFor = null;
+	});
+	
+	gamePhase = "waiting";
+	console.log("Game reset to waiting state");
+	broadcastPlayerList();
 }
 
 wss.on("connection", (ws) => {
@@ -293,67 +393,16 @@ function endVotingPhase() {
 	}
 }
 
-function startGame(common: string, impostor: string) {
-	const readyPlayers = players.filter((player) => player.username);
-	if (readyPlayers.length < 3) {
-		console.log("Not enough players with usernames to start the game!");
-		return;
-	}
-
-	gamePhase = "question";
-	commonQuestion = common;
-	impostorQuestion = impostor;
-	impostorIndex = Math.floor(Math.random() * readyPlayers.length);
-
-	players.forEach((player) => {
-		player.answer = null;
-		player.voted = false;
-		player.votedFor = null;
-	});
-
-	readyPlayers.forEach((player, index) => {
-		const question = index === impostorIndex ? impostorQuestion : commonQuestion;
-		if (player.ws.readyState === WebSocket.OPEN) {
-			player.ws.send(JSON.stringify({ type: "question", question }));
-		}
-	});
-
-	const impostorUsername = readyPlayers[impostorIndex].username;
-	console.log(`Game started!`);
-
-	let remainingTime = 60;
-
-	if (votingTimer) {
-		clearInterval(votingTimer);
-		votingTimer = null;
-	}
-
-	questionTimer = setInterval(() => {
-		sendTimeRemaining(remainingTime);
-		remainingTime--;
-		if (remainingTime <= 0) {
-			clearInterval(questionTimer as NodeJS.Timeout);
-			questionTimer = null;
-			startVotingPhase();
-		}
-	}, 1000);
-}
-
-process.stdin.on("data", (input) => {
-	const command = input.toString().trim();
-	if (command === "start") {
-		process.stdout.write("Enter a common question: ");
-		process.stdin.once("data", (commonInput) => {
-			const commonQuestion = commonInput.toString().trim();
-			process.stdout.write("Enter a unique question for the impostor: ");
-			process.stdin.once("data", (impostorInput) => {
-				const impostorQuestion = impostorInput.toString().trim();
-				startGame(commonQuestion, impostorQuestion);
-			});
-		});
-	}
-});
+(global as any).startGame = startGame;
+(global as any).kickPlayer = kickPlayer;
+(global as any).listPlayers = listPlayers;
+(global as any).resetGame = resetGame;
 
 server.listen(PORT, () => {
 	console.log(`WebSocket server running on port ${PORT}`);
+	console.log(`Available admin commands (use in server console):`);
+	console.log(`- startGame("common question", "impostor question")`);
+	console.log(`- kickPlayer("username")`);
+	console.log(`- listPlayers()`);
+	console.log(`- resetGame()`);
 });
