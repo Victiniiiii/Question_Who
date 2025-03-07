@@ -4,7 +4,7 @@ let currentPhase = "waiting";
 
 const usernameScreen = document.getElementById("usernameScreen");
 const usernameInput = document.getElementById("usernameInput");
-const submitUsername = document.getElementById("submitUsername");
+const submitUsername = document.getElementById("usernameSubmit");
 const gameContainer = document.getElementById("gameContainer");
 const question = document.getElementById("question");
 const answer = document.getElementById("answer");
@@ -22,7 +22,7 @@ const gameOutcome = document.getElementById("gameOutcome");
 
 submitUsername.addEventListener("click", () => {
 	const username = usernameInput.value.trim();
-	if (username) {
+	if (username && username.length > 0) {
 		myUsername = username;
 		socket.send(
 			JSON.stringify({
@@ -35,7 +35,9 @@ submitUsername.addEventListener("click", () => {
 
 		usernameScreen.classList.add("hidden");
 		gameContainer.classList.remove("hidden");
-	}
+	} else {
+        alert("Username not found or too short.");
+    }
 });
 
 submitAnswer.addEventListener("click", () => {
@@ -56,7 +58,7 @@ socket.onmessage = (event) => {
 	if (data.type === "update_player_list") {
 		playerList.innerHTML = "";
 		data.playerList.forEach((player) => {
-			const listItem = document.createElement("li");
+			const listItem = document.createElement("p");
 
 			if (player.profileImage) {
 				const img = document.createElement("img");
@@ -67,7 +69,7 @@ socket.onmessage = (event) => {
 			}
 
 			const playerInfo = document.createElement("div");
-			playerInfo.classList.add("player-info");
+			playerInfo.classList.add("flexcolumn");
 
 			const usernameSpan = document.createElement("span");
 			usernameSpan.textContent = player.username;
@@ -114,7 +116,7 @@ socket.onmessage = (event) => {
 				}
 
 				const voteInfo = document.createElement("div");
-				voteInfo.classList.add("vote-info");
+				voteInfo.classList.add("flexcolumn");
 
 				const voteButton = document.createElement("button");
 				voteButton.textContent = `${player.username}: ${player.answer || "[No answer]"}`;
@@ -144,9 +146,9 @@ socket.onmessage = (event) => {
 	} else if (data.type === "time_remaining") {
 		timer.textContent = `Time remaining: ${data.remainingTime} seconds`;
 		if (data.remainingTime <= 10) {
-			timer.classList.add("time-warning");
+			timer.classList.add("timerwarning");
 		} else {
-			timer.classList.remove("time-warning");
+			timer.classList.remove("timerwarning");
 		}
 	} else if (data.type === "game_results") {
 		updatePhase("results");
@@ -176,7 +178,7 @@ socket.onmessage = (event) => {
 			}
 
 			const resultInfo = document.createElement("div");
-			resultInfo.classList.add("result-info");
+			resultInfo.classList.add("flexcolumn");
 
 			const resultText = document.createElement("p");
 			resultText.textContent = `${result.username}: ${result.votes} votes`;

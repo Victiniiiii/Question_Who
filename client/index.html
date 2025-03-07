@@ -9,18 +9,20 @@
 	<body>
 		<h1>Find the Impostor</h1>
 
-		<div id="usernameScreen">
-			<h2>Enter your username:</h2>
-			<input type="text" id="usernameInput" placeholder="Your username" />
-			<div class="pfp-container">
-				<div class="arrows">
+		<div id="usernameScreen" class="flexrow">
+			<div class="flexcolumn">
+				<h2>Enter your username:</h2>
+				<input type="text" id="usernameInput" placeholder="Your username" />
+                <button id="usernameSubmit">Join Game</button>
+			</div>
+			<div class="flexcolumn">
+				<img id="pfp" src="pfp1.png" alt="pfp1" />
+				<div id="description"></div>
+				<div id="buttonContainer">
 					<button id="left-arrow">&#8592;</button>
 					<button id="right-arrow">&#8594;</button>
 				</div>
-				<img id="pfp" src="pfp1.png" alt="pfp1" />
-				<div class="description" id="description">Description for PFP 1</div>
-			</div>
-			<button id="submitUsername">Join Game</button>
+			</div>			
 		</div>
 
 		<div id="gameContainer" class="hidden">
@@ -35,7 +37,7 @@
 
 			<div id="votingPhase" class="hidden">
 				<h2>Vote for who you think has a different question:</h2>
-                <div id="revealQuestion"></div>
+				<div id="revealQuestion"></div>
 				<div id="votingOptions"></div>
 			</div>
 
@@ -46,7 +48,7 @@
 			</div>
 
 			<h2>Players</h2>
-			<ul id="playerList"></ul>
+			<div id="playerList"></div>
 		</div>
 
 		<script src="game.js"></script>
