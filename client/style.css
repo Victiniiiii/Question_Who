@@ -13,6 +13,138 @@ body {
   background: radial-gradient(at 91% 84%, #e6e9af 0px, transparent 50%), radial-gradient(at 34% 90%, #0e6552 0px, transparent 50%), radial-gradient(at 22% 19%, #fbc6e0 0px, transparent 50%), radial-gradient(at 84% 15%, #ddea91 0px, transparent 50%), #cfe7da;
 }
 
+.hidden {
+  display: none !important;
+}
+
+.flexrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.flexcolumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.timer {
+  color: white;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+.timerwarning {
+  color: red;
+  font-weight: bold;
+}
+
+#gameOutcome {
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+#gameContainer {
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+#gamePhase {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  height: 5vh;
+  border-bottom: 1px solid white;
+}
+
+.arrows {
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+  margin-top: 20px;
+}
+.arrows button {
+  font-size: 1.5em;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.vote-button {
+  margin: 5px;
+  padding: 5px 10px;
+}
+
+.player-points,
+.vote-points,
+.result-points {
+  font-size: 0.9em;
+  color: #666;
+}
+
+#playerList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 57vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 0 2vw;
+}
+
+#questionPhase {
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#votingOptions {
+  display: flex;
+  flex-direction: row;
+  overflow-y: scroll;
+  flex-wrap: wrap;
+  padding: 0 2vw;
+}
+
+#resultsPhase {
+  display: flex;
+  height: 65vh;
+  flex-direction: column;
+}
+
+#voteResults {
+  padding: 0 2vw;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: scroll;
+}
+
+#impostorReveal,
+#revealQuestion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 @media (min-width: 768px) {
   h1 {
     text-align: center;
@@ -33,59 +165,11 @@ body {
     justify-content: center;
     height: 5vh;
   }
-  .hidden {
-    display: none !important;
-  }
-  .flexrow {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-  }
-  .flexcolumn {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-  }
-  .timer {
-    color: white;
-    height: 10%;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-  }
-  .timerwarning {
-    color: red;
-    font-weight: bold;
-  }
   #pfp {
     width: 10vw;
     height: 10vw;
     border-radius: 10%;
     border: 1px solid black;
-  }
-  #gamephase {
-    align-self: start;
-  }
-  #gameOutcome {
-    font-weight: bold;
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-  }
-  #gameContainer {
-    display: flex;
-    flex-direction: row;
-    color: white;
   }
   #gameContainerLeft {
     width: 30vw;
@@ -112,21 +196,6 @@ body {
     text-align: center;
     justify-content: center;
   }
-  .arrows {
-    display: flex;
-    justify-content: space-between;
-    width: 100px;
-    margin-top: 20px;
-  }
-  .arrows button {
-    font-size: 1.5em;
-    padding: 10px;
-    cursor: pointer;
-  }
-  .vote-button {
-    margin: 5px;
-    padding: 5px 10px;
-  }
   .player-pfp,
   .vote-pfp,
   .result-pfp {
@@ -136,18 +205,7 @@ body {
     margin-right: 10px;
     vertical-align: middle;
   }
-  #playerList {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    height: 57vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 0 2vw;
-  }
-  #playerList p,
-  .vote-option,
-  .result-item {
+  #playerList p {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
@@ -155,24 +213,14 @@ body {
   }
   .result-item,
   .vote-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
     width: 15vw;
   }
   .result-item p,
   .vote-option p {
     font-size: 1vw;
-  }
-  #gamePhase {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    height: 5vh;
-  }
-  .player-points,
-  .vote-points,
-  .result-points {
-    font-size: 0.9em;
-    color: #666;
   }
   #usernameScreen {
     width: 40vw;
@@ -231,20 +279,6 @@ body {
     font-size: 5vh;
     text-align: center;
   }
-  #questionPhase {
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-  }
-  #votingOptions {
-    display: flex;
-    flex-direction: row;
-    overflow-y: scroll;
-    flex-wrap: wrap;
-    padding: 0 2vw;
-  }
   #submitAnswer {
     width: 15vw;
     height: 7vh;
@@ -257,18 +291,8 @@ body {
   #submitAnswer:hover {
     background-color: rgba(0, 0, 0, 0.6);
   }
-  #resultsPhase {
-    display: flex;
-    height: 65vh;
-    flex-direction: column;
-  }
   #voteResults {
     height: 35vh;
-    padding: 0 2vw;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    overflow-y: scroll;
   }
   #question {
     font-size: 1.1vw;
@@ -276,10 +300,6 @@ body {
   #impostorReveal,
   #revealQuestion {
     height: 5vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
   }
 }
 @media (max-width: 767px) {
@@ -301,59 +321,11 @@ body {
     justify-content: center;
     height: 5vh;
   }
-  .hidden {
-    display: none !important;
-  }
-  .flexrow {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-  }
-  .flexcolumn {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    height: 100%;
-  }
-  .timer {
-    color: white;
-    height: 10%;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-  }
-  .timerwarning {
-    color: red;
-    font-weight: bold;
-  }
   #pfp {
     width: 40vw;
     height: 40vw;
     border-radius: 10%;
     border: 1px solid black;
-  }
-  #gamephase {
-    align-self: start;
-  }
-  #gameOutcome {
-    font-weight: bold;
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-  }
-  #gameContainer {
-    display: flex;
-    flex-direction: row;
-    color: white;
   }
   #gameContainerLeft {
     width: 30vw;
@@ -380,21 +352,6 @@ body {
     text-align: center;
     justify-content: center;
   }
-  .arrows {
-    display: flex;
-    justify-content: space-between;
-    width: 100px;
-    margin-top: 20px;
-  }
-  .arrows button {
-    font-size: 1.5em;
-    padding: 10px;
-    cursor: pointer;
-  }
-  .vote-button {
-    margin: 5px;
-    padding: 5px 10px;
-  }
   .player-pfp,
   .vote-pfp,
   .result-pfp {
@@ -404,47 +361,23 @@ body {
     margin-right: 10px;
     vertical-align: middle;
   }
-  #playerList {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    height: 57vh;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    padding: 0 2vw;
-  }
-  #playerList p,
-  .vote-option,
-  .result-item {
+  #playerList p {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
-    width: 12vw;
-  }
-  #playerList p {
     width: 30vw;
   }
   .result-item,
   .vote-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
     width: 45vw;
     height: 8vh;
   }
   .result-item p,
   .vote-option p {
     font-size: 4vw;
-  }
-  #gamePhase {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    height: 5vh;
-  }
-  .player-points,
-  .vote-points,
-  .result-points {
-    font-size: 0.9em;
-    color: #666;
   }
   #usernameScreen {
     width: 100vw;
@@ -503,19 +436,7 @@ body {
     font-size: 3vh;
     text-align: center;
   }
-  #questionPhase {
-    height: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
   #votingOptions {
-    display: flex;
-    flex-direction: row;
-    overflow-y: scroll;
-    flex-wrap: wrap;
-    padding: 0 2vw;
     height: 45vh;
   }
   #submitAnswer {
@@ -531,26 +452,11 @@ body {
   #submitAnswer:hover {
     background-color: rgba(0, 0, 0, 0.6);
   }
-  #resultsPhase {
-    display: flex;
-    height: 65vh;
-    flex-direction: column;
-  }
   #voteResults {
     height: 55vh;
-    padding: 0 2vw;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    overflow-y: scroll;
   }
-  #impostorReveal,
-  #revealQuestion {
+  #impostorReveal {
     height: 5vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
   }
   #revealQuestion {
     height: 10vh;
