@@ -67,7 +67,7 @@ h2 {
 	border: 1px solid black;
 }
 
-.game {
+#game {
 	&phase {
 		align-self: start;
 	}
@@ -80,37 +80,37 @@ h2 {
 		border-radius: 5px;
 	}
 
-    &Container {
-        display: flex;
-        flex-direction: row;
+	&Container {
+		display: flex;
+		flex-direction: row;
 
-        &Left {
-            width: 30vw;
-            height: 70vh;
-            background-color: rgb(0, 0, 0, 0.75);
-            border: 1px solid white;
-            border-radius: 10px;
-        }
+		&Left {
+			width: 30vw;
+			height: 70vh;
+			background-color: rgb(0, 0, 0, 0.75);
+			border: 1px solid white;
+			border-radius: 10px;
+		}
 
-        &Right {
-            width: 50vw;
-            height: 70vh;
-            background-color: rgb(0, 0, 0, 0.75);
-            border: 1px solid white;
-            border-radius: 10px;
-            margin-left: 10vw;
-        }
-    }
+		&Right {
+			width: 50vw;
+			height: 70vh;
+			background-color: rgb(0, 0, 0, 0.75);
+			border: 1px solid white;
+			border-radius: 10px;
+			margin-left: 10vw;
+		}
+	}
 }
 
 #description {
 	font-size: 1vw;
-    height: 5vh;
+	height: 5vh;
 	margin: 10px 0;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
 }
 
 .arrows {
@@ -141,13 +141,19 @@ h2 {
 	vertical-align: middle;
 }
 
+#playerList {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(10vw, 1fr));
+	gap: 10px;
+}
+
 #playerList p,
 .vote-option,
 .result-item {
 	display: flex;
 	align-items: center;
 	margin-bottom: 5px;
-    width: 10vw;
+	width: 10vw;
 }
 
 .player-points,
@@ -186,9 +192,9 @@ h2 {
 		margin-top: 6vh;
 	}
 
-    &Submit:hover {
-        background-color: rgb(0, 0, 0, 0.95);
-    }
+	&Submit:hover {
+		background-color: rgb(0, 0, 0, 0.95);
+	}
 }
 
 #buttonContainer {
@@ -201,7 +207,7 @@ h2 {
 		color: white;
 		background-color: rgb(0, 0, 0, 0.3);
 		border: 1px solid white;
-        font-size: 1.2vw;
+		font-size: 1.2vw;
 	}
 
 	button:hover {

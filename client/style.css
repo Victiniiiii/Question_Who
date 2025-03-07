@@ -63,28 +63,28 @@ h2 {
   border: 1px solid black;
 }
 
-.gamephase {
+#gamephase {
   align-self: start;
 }
-.gameOutcome {
+#gameOutcome {
   font-weight: bold;
   margin: 10px 0;
   padding: 10px;
   background-color: #f0f0f0;
   border-radius: 5px;
 }
-.gameContainer {
+#gameContainer {
   display: flex;
   flex-direction: row;
 }
-.gameContainerLeft {
+#gameContainerLeft {
   width: 30vw;
   height: 70vh;
   background-color: rgba(0, 0, 0, 0.75);
   border: 1px solid white;
   border-radius: 10px;
 }
-.gameContainerRight {
+#gameContainerRight {
   width: 50vw;
   height: 70vh;
   background-color: rgba(0, 0, 0, 0.75);
@@ -129,6 +129,12 @@ h2 {
   border-radius: 1vw;
   margin-right: 10px;
   vertical-align: middle;
+}
+
+#playerList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10vw, 1fr));
+  gap: 10px;
 }
 
 #playerList p,
