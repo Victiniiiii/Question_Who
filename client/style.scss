@@ -1,8 +1,12 @@
+* {
+    box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
 body {
 	width: 100dvw;
 	height: 100dvh;
 	overflow: hidden;
-	font-family: Verdana, Geneva, Tahoma, sans-serif;
 	background: radial-gradient(at 91% 84%, #e6e9af 0px, transparent 50%), radial-gradient(at 34% 90%, #0e6552 0px, transparent 50%), radial-gradient(at 22% 19%, #fbc6e0 0px, transparent 50%), radial-gradient(at 84% 15%, #ddea91 0px, transparent 50%), #cfe7da;
 }
 
@@ -23,6 +27,7 @@ h2 {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	height: 5vh;
 }
 
 .hidden {
@@ -53,6 +58,11 @@ h2 {
 
 .timer {
 	color: black;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
 
 	&warning {
 		color: red;
@@ -83,6 +93,7 @@ h2 {
 	&Container {
 		display: flex;
 		flex-direction: row;
+		color: white;
 
 		&Left {
 			width: 30vw;
@@ -145,6 +156,9 @@ h2 {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(10vw, 1fr));
 	gap: 10px;
+	overflow-y: scroll;
+	height: 58vh;
+	overflow-x: hidden;
 }
 
 #playerList p,
@@ -223,4 +237,19 @@ h2 {
 #right-arrow {
 	border-top-right-radius: 1vw;
 	border-bottom-right-radius: 1vw;
+}
+
+#voteResults {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#impostorReveal {
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }

@@ -133,12 +133,6 @@ socket.onmessage = (event) => {
 					});
 				});
 				voteInfo.appendChild(voteButton);
-
-				const pointsSpan = document.createElement("span");
-				pointsSpan.textContent = `${player.points} points`;
-				pointsSpan.classList.add("vote-points");
-				voteInfo.appendChild(pointsSpan);
-
 				voteContainer.appendChild(voteInfo);
 				votingOptions.appendChild(voteContainer);
 			}
