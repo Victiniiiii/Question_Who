@@ -35,8 +35,8 @@ submitUsername.addEventListener("click", () => {
 		usernameScreen.classList.add("hidden");
 		gameContainer.classList.remove("hidden");
 	} else {
-        alert("Username not found or too short or too long (Limit = 15).");
-    }
+		alert("Username not found or too short or too long (Limit = 15).");
+	}
 });
 
 submitAnswer.addEventListener("click", () => {
