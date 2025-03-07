@@ -1,11 +1,13 @@
 * {
 	box-sizing: border-box;
 	font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 0;
+    margin: 0;
 }
 
 body {
-	width: 100dvw;
-	height: 100dvh;
+	width: 100vw;
+	height: 100vh;
 	overflow: hidden;
 	background: radial-gradient(at 91% 84%, #e6e9af 0px, transparent 50%), radial-gradient(at 34% 90%, #0e6552 0px, transparent 50%), radial-gradient(at 22% 19%, #fbc6e0 0px, transparent 50%), radial-gradient(at 84% 15%, #ddea91 0px, transparent 50%), #cfe7da;
 }
@@ -491,7 +493,7 @@ body {
 		width: 45vw;
         height: 8vh;
 		p {
-			font-size: 1vw;
+			font-size: 4vw;
 		}
 	}
 
@@ -592,6 +594,7 @@ body {
 		overflow-y: scroll;
 		flex-wrap: wrap;
 		padding: 0 2vw;
+        height: 45vh;
 	}
 
 	#submitAnswer {
@@ -616,7 +619,7 @@ body {
 	}
 
 	#voteResults {
-		height: 35vh;
+		height: 55vh;
 		padding: 0 2vw;
 		display: flex;
 		flex-direction: row;
@@ -632,4 +635,12 @@ body {
 		justify-content: center;
 		text-align: center;
 	}
+
+    #revealQuestion {
+        height: 10vh;
+    }
+
+    #question {
+        text-align: center;
+    }
 }
