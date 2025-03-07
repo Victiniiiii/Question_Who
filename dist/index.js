@@ -153,7 +153,7 @@ function startGame(common, impostor) {
 		}
 	});
 	const impostorUsername = readyPlayers[impostorIndex].username;
-	console.log(`Game started! Impostor is: ${impostorUsername}`);
+	console.log(`Game started!`);
 	let remainingTime = 60;
 	if (votingTimer) {
 		clearInterval(votingTimer);
@@ -313,10 +313,10 @@ function startVotingPhase() {
 function updatePoints(impostorWon, isTie) {
 	const readyPlayers = players.filter((player) => player.username !== null);
 	const impostor = readyPlayers[impostorIndex];
-	if (impostorWon) {
-		impostor.points += 3;
-	} else if (isTie) {
+	if (isTie) {
 		impostor.points += 1;
+	} else if (impostorWon) {
+		impostor.points += 3;
 	} else {
 		readyPlayers.forEach((player) => {
 			if (player !== impostor) {
@@ -374,5 +374,4 @@ function endVotingPhase() {
 }
 server.listen(PORT, () => {
 	console.log(`WebSocket server running on port ${PORT}`);
-	console.log(`Game server started. First connected player will have admin privileges.`);
 });

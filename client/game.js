@@ -186,11 +186,6 @@ socket.onmessage = (event) => {
 		});
 
 		impostorReveal.textContent = `The impostor was: ${data.impostor}`;
-
-		const impostorItem = document.querySelector(`.result-item:has(.result-info p:contains('${data.impostor}'))`);
-		if (impostorItem) {
-			impostorItem.classList.add("impostor-result");
-		}
 	}
 };
 
