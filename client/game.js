@@ -98,7 +98,7 @@ socket.onmessage = (event) => {
 
 		const revealQuestionDiv = document.getElementById("revealQuestion");
 		if (revealQuestionDiv) {
-			revealQuestionDiv.textContent = `Common Question: ${data.commonQuestion}`;
+			revealQuestionDiv.textContent = `The Question was: ${data.commonQuestion}`;
 			revealQuestionDiv.classList.add("revealed-question");
 		}
 

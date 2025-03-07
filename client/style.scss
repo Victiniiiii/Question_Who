@@ -153,13 +153,13 @@ h2 {
 }
 
 #playerList {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(10vw, 1fr));
-	gap: 10px;
-	overflow-y: scroll;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 	height: 57vh;
 	overflow-x: hidden;
-	padding: 2vw;
+    overflow-y: scroll;
+	padding: 0 2vw;
 }
 
 #playerList p,
@@ -168,7 +168,7 @@ h2 {
 	display: flex;
 	align-items: center;
 	margin-bottom: 5px;
-	width: 10vw;
+	width: 13vw;
 }
 
 .result-item, .vote-option {
@@ -255,6 +255,8 @@ h2 {
 textarea {
 	width: 100%;
     height: 15vh;
+    font-size: 5vh;
+    text-align: center;
 }
 
 #questionPhase {
@@ -270,6 +272,7 @@ textarea {
 	flex-direction: row;
 	overflow-y: scroll;
 	flex-wrap: wrap;
+    padding: 0 2vw;
 }
 
 #submitAnswer {
@@ -294,7 +297,7 @@ textarea {
 }
 
 #voteResults {
-	height: 50vw;
+	height: 45vh;
 	padding: 0 2vw;
 	display: flex;
 	flex-direction: row;
