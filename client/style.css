@@ -26,7 +26,7 @@ h2 {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .flexrow {
@@ -73,6 +73,25 @@ h2 {
   background-color: #f0f0f0;
   border-radius: 5px;
 }
+.gameContainer {
+  display: flex;
+  flex-direction: row;
+}
+.gameContainerLeft {
+  width: 30vw;
+  height: 70vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 1px solid white;
+  border-radius: 10px;
+}
+.gameContainerRight {
+  width: 50vw;
+  height: 70vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 1px solid white;
+  border-radius: 10px;
+  margin-left: 10vw;
+}
 
 #description {
   font-size: 1vw;
@@ -105,9 +124,9 @@ h2 {
 .player-pfp,
 .vote-pfp,
 .result-pfp {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 5vw;
+  height: 5vw;
+  border-radius: 1vw;
   margin-right: 10px;
   vertical-align: middle;
 }
@@ -118,6 +137,7 @@ h2 {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+  width: 10vw;
 }
 
 .player-points,

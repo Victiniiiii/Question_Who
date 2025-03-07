@@ -13,7 +13,7 @@
 			<div class="flexcolumn">
 				<h2>Enter your username:</h2>
 				<input type="text" id="usernameInput" placeholder="Your username" />
-                <button id="usernameSubmit">Join Game</button>
+				<button id="usernameSubmit">Join Game</button>
 			</div>
 			<div class="flexcolumn">
 				<img id="pfp" src="pfp1.png" alt="pfp1" />
@@ -22,33 +22,35 @@
 					<button id="left-arrow">&#8592;</button>
 					<button id="right-arrow">&#8594;</button>
 				</div>
-			</div>			
+			</div>
 		</div>
 
 		<div id="gameContainer" class="hidden">
-			<div id="gamePhase">Waiting for players...</div>
-			<div id="timer" class="timer"></div>
-
-			<div id="questionPhase" class="hidden">
-				<p id="question">Waiting for question...</p>
-				<textarea id="answer" placeholder="Type your answer here"></textarea>
-				<button id="submitAnswer">Submit Answer</button>
+			<div id="gameContainerLeft">
+				<div id="gamePhase">Waiting for the game to start...</div>
+				<h2>Players</h2>
+				<div id="playerList"></div>
 			</div>
+			<div id="gameContainerRight">
+				<div id="timer" class="timer"></div>
+				<div id="questionPhase" class="hidden">
+					<p id="question">Waiting for question...</p>
+					<textarea id="answer" placeholder="Type your answer here"></textarea>
+					<button id="submitAnswer">Submit Answer</button>
+				</div>
 
-			<div id="votingPhase" class="hidden">
-				<h2>Vote for who you think has a different question:</h2>
-				<div id="revealQuestion"></div>
-				<div id="votingOptions"></div>
+				<div id="votingPhase" class="hidden">
+					<h2>Vote for who you think has a different question:</h2>
+					<div id="revealQuestion"></div>
+					<div id="votingOptions"></div>
+				</div>
+
+				<div id="resultsPhase" class="hidden">
+					<h2>Results:</h2>
+					<div id="voteResults"></div>
+					<p id="impostorReveal"></p>
+				</div>
 			</div>
-
-			<div id="resultsPhase" class="hidden">
-				<h2>Results:</h2>
-				<div id="voteResults"></div>
-				<p id="impostorReveal"></p>
-			</div>
-
-			<h2>Players</h2>
-			<div id="playerList"></div>
 		</div>
 
 		<script src="game.js"></script>
