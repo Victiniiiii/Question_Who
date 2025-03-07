@@ -14,7 +14,6 @@ interface Player {
 	voted: boolean;
 	votedFor: string | null;
 	points: number;
-	isAdmin: boolean;
 }
 
 let players: Player[] = [];
@@ -152,38 +151,6 @@ function startGame(common: string, impostor: string) {
 	return true;
 }
 
-function listPlayers(): void {
-	console.log("Connected players:");
-	console.table(
-		players.map((p) => ({
-			username: p.username || "Anonymous",
-			profileImage: p.profileImage,
-			points: p.points,
-			status: p.answer !== null ? "Answered" : "Waiting",
-		}))
-	);
-
-	const playerData = players.map((p) => ({
-		username: p.username || "Anonymous",
-		profileImage: p.profileImage,
-		points: p.points,
-		status: p.answer !== null ? "Answered" : "Waiting",
-	}));
-
-	const adminMessage = JSON.stringify({
-		type: "admin_player_list",
-		players: playerData,
-	});
-
-	players
-		.filter((p) => p.isAdmin)
-		.forEach((admin) => {
-			if (admin.ws.readyState === WebSocket.OPEN) {
-				admin.ws.send(adminMessage);
-			}
-		});
-}
-
 function resetGame(): void {
 	if (questionTimer) {
 		clearInterval(questionTimer);
@@ -207,32 +174,15 @@ function resetGame(): void {
 }
 
 function handleAdminCommand(player: Player, data: any) {
-	if (players.length === 1 || player.isAdmin) {
-		player.isAdmin = true;
-
-		if (data.command === "startGame") {
-			startGame(data.commonQuestion, data.impostorQuestion);
-			console.log(`Admin ${player.username} started game`);
-		} else if (data.command === "kickPlayer") {
-			kickPlayer(data.username);
-			console.log(`Admin ${player.username} kicked player ${data.username}`);
-		} else if (data.command === "listPlayers") {
-			listPlayers();
-			console.log(`Admin ${player.username} requested player list`);
-		} else if (data.command === "resetGame") {
-			resetGame();
-			console.log(`Admin ${player.username} reset the game`);
-		}
-	} else {
-		console.log(`Non-admin ${player.username} attempted admin command: ${data.command}`);
-		if (player.ws.readyState === WebSocket.OPEN) {
-			player.ws.send(
-				JSON.stringify({
-					type: "admin_error",
-					message: "You don't have admin privileges",
-				})
-			);
-		}
+	if (data.command === "startGame") {
+		startGame(data.commonQuestion, data.impostorQuestion);
+		console.log(`Admin ${player.username} started game`);
+	} else if (data.command === "kickPlayer") {
+		kickPlayer(data.username);
+		console.log(`Admin ${player.username} kicked player ${data.username}`);
+	} else if (data.command === "resetGame") {
+		resetGame();
+		console.log(`Admin ${player.username} reset the game`);
 	}
 }
 
@@ -246,7 +196,6 @@ wss.on("connection", (ws) => {
 		voted: false,
 		votedFor: null,
 		points: 0,
-		isAdmin: false,
 	};
 
 	players.push(newPlayer);
@@ -272,11 +221,6 @@ wss.on("connection", (ws) => {
 				console.log(`${data.username} connected! Total players: ${players.length}`);
 				ws.send(JSON.stringify({ type: "welcome", message: `Welcome ${data.username}!` }));
 				broadcastPlayerList();
-
-				if (players.length === 1) {
-					player.isAdmin = true;
-					ws.send(JSON.stringify({ type: "admin_status", isAdmin: true }));
-				}
 			}
 		} else if (data.type === "submit_answer") {
 			if (gamePhase === "question" && player.answer === null) {

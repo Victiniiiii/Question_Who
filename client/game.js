@@ -245,6 +245,17 @@ document.getElementById("right-arrow").addEventListener("click", () => {
 
 updatePfp();
 
+function handleKickEvent(event) {
+	const data = JSON.parse(event.data);
+
+	if (data.type === "kicked") {
+		alert(data.message);
+		window.location.reload();
+	}
+}
+
+socket.addEventListener("message", handleKickEvent);
+
 function startGame(commonQuestion, impostorQuestion) {
 	socket.send(
 		JSON.stringify({
@@ -268,16 +279,6 @@ function kickPlayer(username) {
 	console.log(`Sent kick command for player: ${username}`);
 }
 
-function listPlayers() {
-	socket.send(
-		JSON.stringify({
-			type: "admin_command",
-			command: "listPlayers",
-		})
-	);
-	console.log("Requested player list from server");
-}
-
 function resetGame() {
 	socket.send(
 		JSON.stringify({
@@ -288,9 +289,10 @@ function resetGame() {
 	console.log("Sent reset game command");
 }
 
-console.log("Commands: startGame(), kickPlayer(), listPlayers(), resetGame().");
+console.log(`startGame("Question 1","Question 2") --> Starts the game with these two questions`);
+console.log(`kickPlayer("username") --> Kicks the player with that username`);
+console.log(`resetGame() --> Resets the game`);
 
 window.startGame = startGame;
 window.kickPlayer = kickPlayer;
-window.listPlayers = listPlayers;
 window.resetGame = resetGame;
