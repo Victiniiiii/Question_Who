@@ -22,7 +22,7 @@ const gameOutcome = document.getElementById("gameOutcome");
 
 submitUsername.addEventListener("click", () => {
 	const username = usernameInput.value.trim();
-	if (username && username.length > 0) {
+	if (username.length > 0 && username.length < 15) {
 		myUsername = username;
 		socket.send(
 			JSON.stringify({
@@ -36,7 +36,7 @@ submitUsername.addEventListener("click", () => {
 		usernameScreen.classList.add("hidden");
 		gameContainer.classList.remove("hidden");
 	} else {
-        alert("Username not found or too short.");
+        alert("Username not found or too short or too long (Limit = 15).");
     }
 });
 
@@ -176,7 +176,7 @@ socket.onmessage = (event) => {
 
 			const resultText = document.createElement("p");
 			resultText.textContent = `${result.username}: ${result.votes} votes`;
-            
+
 			resultInfo.appendChild(resultText);
 			resultItem.appendChild(resultInfo);
 			voteResults.appendChild(resultItem);
@@ -204,7 +204,7 @@ function updatePhase(newPhase) {
 		gamePhase.textContent = "Vote for the impostor!";
 		votingPhase.classList.remove("hidden");
 	} else if (newPhase === "results") {
-		gamePhase.textContent = "Results";
+		gamePhase.textContent = "Results Phase";
 		resultsPhase.classList.remove("hidden");
 	} else {
 		gamePhase.textContent = "Waiting for players...";
