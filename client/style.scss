@@ -103,10 +103,10 @@ body {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	height: 57vh;
+	max-height: 57vh;
 	overflow-x: hidden;
 	overflow-y: scroll;
-	padding: 0 2vw;
+	justify-content: center;
 }
 
 #questionPhase {
@@ -137,6 +137,7 @@ body {
 	flex-direction: row;
 	flex-wrap: wrap;
 	overflow-y: scroll;
+	justify-content: center;
 }
 
 #impostorReveal,
@@ -217,8 +218,12 @@ body {
 	#playerList p {
 		display: flex;
 		align-items: center;
-		margin-bottom: 5px;
-		width: 12vw;
+		width: 14vw;
+        height: 5.5vw;
+		border: 1px solid white;
+		border-radius: 20px;
+		padding-left: 0.5vw;
+        margin-right: 5px;
 	}
 
 	.result-item,
@@ -358,7 +363,7 @@ body {
 	}
 
 	#gameContainerLeft {
-		width: 30vw;
+		width: 35vw;
 		height: 70vh;
 		background-color: rgba(0, 0, 0, 0.75);
 		border: 1px solid white;
@@ -372,7 +377,7 @@ body {
 		background-color: rgba(0, 0, 0, 0.75);
 		border: 1px solid white;
 		border-radius: 10px;
-		margin-left: 10vw;
+		margin-left: 5vw;
 	}
 
 	#description {
@@ -400,6 +405,7 @@ body {
 		align-items: center;
 		margin-bottom: 5px;
 		width: 30vw;
+        padding-left: 2vw;
 	}
 
 	.result-item,
