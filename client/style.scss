@@ -223,7 +223,7 @@ body {
 		border: 1px solid white;
 		border-radius: 20px;
 		padding-left: 0.5vw;
-        margin-right: 5px;
+        margin: 0 5px 5px 0;
 	}
 
 	.result-item,
@@ -483,7 +483,7 @@ body {
 	}
 
 	textarea {
-		width: 100%;
+		width: 90%;
 		height: 15vh;
 		font-size: 3vh;
 		text-align: center;
@@ -501,7 +501,6 @@ body {
 		border: 1px solid white;
 		font-size: 4vw;
 		border-radius: 20px;
-		margin-top: 5vh;
 
 		&:hover {
 			background-color: rgba(0, 0, 0, 0.6);
@@ -519,6 +518,10 @@ body {
 	#revealQuestion {
 		height: 10vh;
 	}
+
+    #gamePhase {
+        height: 7vh;
+    }
 
 	#question {
 		text-align: center;

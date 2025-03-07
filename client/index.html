@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Find the Impostor</title>
+		<title>Soru Kimde</title>
 		<link rel="stylesheet" href="style.css" />
+        <link rel="icon" href="pfp3.png" type="image/png" />
 	</head>
 	<body>
-		<h1>Find the Impostor</h1>
+		<h1>Soru Kimde</h1>
 
 		<div id="usernameScreen" class="flexrow">
 			<div class="flexcolumn">
-				<h2>Enter your username:</h2>
+				<h2>Kullanıcı ismi gir:</h2>
 				<input type="text" id="usernameInput" placeholder="Your username" />
-				<button id="usernameSubmit">Join Game</button>
+				<button id="usernameSubmit">Katıl</button>
 			</div>
 			<div class="flexcolumn">
 				<img id="pfp" src="pfp1.png" alt="pfp1" />
@@ -27,20 +28,20 @@
 
 		<div id="gameContainer" class="hidden">
 			<div id="gameContainerLeft">
-				<h2>Players</h2>
+				<h2>Oyuncular</h2>
 				<div id="playerList"></div>
 			</div>
 			<div id="gameContainerRight">
-                <div id="gamePhase">Waiting for the game to start...</div>
+                <div id="gamePhase">Oyunun başlaması bekleniyor...</div>
 				<div id="timer" class="timer"></div>
 				<div id="questionPhase" class="hidden">
-					<p id="question">Waiting for question...</p>
+					<p id="question">Soru bekleniyor...</p>
 					<textarea id="answer" placeholder="Type your answer here"></textarea>
-					<button id="submitAnswer">Submit Answer</button>
+					<button id="submitAnswer">Cevabı yolla</button>
 				</div>
 
 				<div id="votingPhase" class="hidden">
-					<h2>Vote for who you think has a different question:</h2>
+					<h2>Sorusunun farklı olduğunu düşündüğün kişiye tıkla:</h2>
 					<div id="revealQuestion"></div>
 					<div id="votingOptions"></div>
 				</div>

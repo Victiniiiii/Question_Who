@@ -18,7 +18,6 @@ const votingOptions = document.getElementById("votingOptions");
 const resultsPhase = document.getElementById("resultsPhase");
 const voteResults = document.getElementById("voteResults");
 const impostorReveal = document.getElementById("impostorReveal");
-const gameOutcome = document.getElementById("gameOutcome");
 
 submitUsername.addEventListener("click", () => {
 	const username = usernameInput.value.trim();
@@ -88,7 +87,7 @@ socket.onmessage = (event) => {
 		});
 	} else if (data.type === "question") {
 		updatePhase("question");
-		question.textContent = `Your question: ${data.question}`;
+		question.textContent = `Sorun: ${data.question}`;
 		answer.disabled = false;
 		submitAnswer.disabled = false;
 		answer.value = "";
@@ -98,7 +97,7 @@ socket.onmessage = (event) => {
 
 		const revealQuestionDiv = document.getElementById("revealQuestion");
 		if (revealQuestionDiv) {
-			revealQuestionDiv.textContent = `The Question was: ${data.commonQuestion}`;
+			revealQuestionDiv.textContent = `Soru: ${data.commonQuestion}`;
 			revealQuestionDiv.classList.add("revealed-question");
 		}
 
@@ -138,7 +137,7 @@ socket.onmessage = (event) => {
 			}
 		});
 	} else if (data.type === "time_remaining") {
-		timer.textContent = `Time remaining: ${data.remainingTime} seconds`;
+		timer.textContent = `Kalan süre: ${data.remainingTime} saniye`;
 		if (data.remainingTime <= 10) {
 			timer.classList.add("timerwarning");
 		} else {
@@ -147,17 +146,6 @@ socket.onmessage = (event) => {
 	} else if (data.type === "game_results") {
 		updatePhase("results");
 		voteResults.innerHTML = "";
-
-		if (gameOutcome) {
-			if (data.isTie) {
-				gameOutcome.textContent = "It's a tie! The impostor earns 1 point.";
-			} else if (data.impostorWon) {
-				gameOutcome.textContent = "The impostor wasn't caught and earns 3 points!";
-			} else {
-				gameOutcome.textContent = "The impostor was caught! Everyone else earns 1 point.";
-			}
-			gameOutcome.classList.remove("hidden");
-		}
 
 		data.voteTally.forEach((result) => {
 			const resultItem = document.createElement("div");
@@ -175,14 +163,14 @@ socket.onmessage = (event) => {
 			resultInfo.classList.add("flexcolumn");
 
 			const resultText = document.createElement("p");
-			resultText.textContent = `${result.username}: ${result.votes} votes`;
+			resultText.textContent = `${result.username}: ${result.votes} oy`;
 
 			resultInfo.appendChild(resultText);
 			resultItem.appendChild(resultInfo);
 			voteResults.appendChild(resultItem);
 		});
 
-		impostorReveal.textContent = `The impostor was: ${data.impostor}`;
+		impostorReveal.textContent = `Casus kişi: ${data.impostor}`;
 	}
 };
 
@@ -193,21 +181,17 @@ function updatePhase(newPhase) {
 	votingPhase.classList.add("hidden");
 	resultsPhase.classList.add("hidden");
 
-	if (gameOutcome) {
-		gameOutcome.classList.add("hidden");
-	}
-
 	if (newPhase === "question") {
-		gamePhase.textContent = "Answer the question!";
+		gamePhase.textContent = "Soruyu cevapla!";
 		questionPhase.classList.remove("hidden");
 	} else if (newPhase === "voting") {
-		gamePhase.textContent = "Vote for the impostor!";
+		gamePhase.textContent = "Casusa oy ver!";
 		votingPhase.classList.remove("hidden");
 	} else if (newPhase === "results") {
-		gamePhase.textContent = "Results Phase";
+		gamePhase.textContent = "Sonuçlar";
 		resultsPhase.classList.remove("hidden");
 	} else {
-		gamePhase.textContent = "Waiting for players...";
+		gamePhase.textContent = "Oyuncular bekleniyor...";
 	}
 }
 
