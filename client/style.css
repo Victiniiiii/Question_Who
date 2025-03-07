@@ -54,7 +54,7 @@ h2 {
 }
 
 .timer {
-  color: black;
+  color: white;
   height: 10%;
   display: flex;
   align-items: center;
@@ -165,6 +165,13 @@ h2 {
   width: 15vw;
 }
 
+#gamePhase {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
 .player-points,
 .vote-points,
 .result-points {
@@ -226,6 +233,10 @@ h2 {
   border-bottom-right-radius: 1vw;
 }
 
+textarea {
+  width: 100%;
+}
+
 #questionPhase {
   height: 90%;
   display: flex;
@@ -236,8 +247,23 @@ h2 {
 
 #votingOptions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   overflow-y: scroll;
+  width: 60vw;
+  flex-wrap: wrap;
+}
+
+#submitAnswer {
+  width: 5vw;
+  height: 5vw;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid white;
+  font-size: 1.2vw;
+}
+
+#submitAnswer:hover {
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 #resultsPhase {
@@ -248,13 +274,16 @@ h2 {
 }
 
 #voteResults {
+  height: 50vw;
   height: 60vh;
+  padding: 2vw;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
 }
 
-#impostorReveal {
+#impostorReveal,
+#revealQuestion {
   height: 5vh;
   display: flex;
   align-items: center;
