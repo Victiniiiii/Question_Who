@@ -151,28 +151,6 @@ function startGame(common: string, impostor: string) {
 	return true;
 }
 
-function resetGame(): void {
-	if (questionTimer) {
-		clearInterval(questionTimer);
-		questionTimer = null;
-	}
-
-	if (votingTimer) {
-		clearInterval(votingTimer);
-		votingTimer = null;
-	}
-
-	players.forEach((player) => {
-		player.answer = null;
-		player.voted = false;
-		player.votedFor = null;
-	});
-
-	gamePhase = "waiting";
-	console.log("Game reset to waiting state");
-	broadcastPlayerList();
-}
-
 function handleAdminCommand(player: Player, data: any) {
 	if (data.command === "startGame") {
 		startGame(data.commonQuestion, data.impostorQuestion);
@@ -180,9 +158,6 @@ function handleAdminCommand(player: Player, data: any) {
 	} else if (data.command === "kickPlayer") {
 		kickPlayer(data.username);
 		console.log(`Admin ${player.username} kicked player ${data.username}`);
-	} else if (data.command === "resetGame") {
-		resetGame();
-		console.log(`Admin ${player.username} reset the game`);
 	}
 }
 
@@ -292,6 +267,7 @@ function startVotingPhase() {
 	const message = JSON.stringify({
 		type: "start_voting",
 		players: playerData,
+		commonQuestion: commonQuestion,
 	});
 
 	players.forEach((player) => {

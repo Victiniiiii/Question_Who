@@ -94,6 +94,12 @@ socket.onmessage = (event) => {
 		updatePhase("voting");
 		votingOptions.innerHTML = "";
 
+		const revealQuestionDiv = document.getElementById("revealQuestion");
+		if (revealQuestionDiv) {
+			revealQuestionDiv.textContent = `Common Question: ${data.commonQuestion}`;
+			revealQuestionDiv.classList.add("revealed-question");
+		}
+
 		data.players.forEach((player) => {
 			if (player.username !== myUsername) {
 				const voteContainer = document.createElement("div");
@@ -274,20 +280,8 @@ function kickPlayer(username) {
 	console.log(`Sent kick command for player: ${username}`);
 }
 
-function resetGame() {
-	socket.send(
-		JSON.stringify({
-			type: "admin_command",
-			command: "resetGame",
-		})
-	);
-	console.log("Sent reset game command");
-}
-
 console.log(`startGame("Question 1","Question 2") --> Starts the game with these two questions`);
 console.log(`kickPlayer("username") --> Kicks the player with that username`);
-console.log(`resetGame() --> Resets the game`);
 
 window.startGame = startGame;
 window.kickPlayer = kickPlayer;
-window.resetGame = resetGame;
