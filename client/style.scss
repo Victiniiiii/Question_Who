@@ -10,306 +10,626 @@ body {
 	background: radial-gradient(at 91% 84%, #e6e9af 0px, transparent 50%), radial-gradient(at 34% 90%, #0e6552 0px, transparent 50%), radial-gradient(at 22% 19%, #fbc6e0 0px, transparent 50%), radial-gradient(at 84% 15%, #ddea91 0px, transparent 50%), #cfe7da;
 }
 
-h1 {
-	text-align: center;
-	height: 20vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 5vh;
-	color: white;
-	text-shadow: 4px 4px 4px black;
-}
-
-h2 {
-	text-align: center;
-	font-size: 3vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 5vh;
-}
-
-.hidden {
-	display: none !important;
-}
-
-.flex {
-	&row {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
+@media (min-width: 768px) {
+	h1 {
 		text-align: center;
-		width: 100%;
-		height: 100%;
+		height: 20vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 5vh;
+		color: white;
+		text-shadow: 4px 4px 4px black;
 	}
 
-	&column {
+	h2 {
+		text-align: center;
+		font-size: 3vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 5vh;
+	}
+
+	.hidden {
+		display: none !important;
+	}
+
+	.flex {
+		&row {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			width: 100%;
+			height: 100%;
+		}
+
+		&column {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	.timer {
+		color: white;
+		height: 10%;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
+
+		&warning {
+			color: red;
+			font-weight: bold;
+		}
+	}
+
+	#pfp {
+		width: 10vw;
+		height: 10vw;
+		border-radius: 10%;
+		border: 1px solid black;
+	}
+
+	#game {
+		&phase {
+			align-self: start;
+		}
+
+		&Outcome {
+			font-weight: bold;
+			margin: 10px 0;
+			padding: 10px;
+			background-color: #f0f0f0;
+			border-radius: 5px;
+		}
+
+		&Container {
+			display: flex;
+			flex-direction: row;
+			color: white;
+
+			&Left {
+				width: 30vw;
+				height: 70vh;
+				background-color: rgb(0, 0, 0, 0.75);
+				border: 1px solid white;
+				border-radius: 10px;
+			}
+
+			&Right {
+				width: 50vw;
+				height: 70vh;
+				background-color: rgb(0, 0, 0, 0.75);
+				border: 1px solid white;
+				border-radius: 10px;
+				margin-left: 10vw;
+			}
+		}
+	}
+
+	#description {
+		font-size: 1vw;
+		height: 5vh;
+		margin: 10px 0;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
+	}
+
+	.arrows {
+		display: flex;
+		justify-content: space-between;
+		width: 100px;
+		margin-top: 20px;
+	}
+
+	.arrows button {
+		font-size: 1.5em;
+		padding: 10px;
+		cursor: pointer;
+	}
+
+	.vote-button {
+		margin: 5px;
+		padding: 5px 10px;
+	}
+
+	.player-pfp,
+	.vote-pfp,
+	.result-pfp {
+		width: 5vw;
+		height: 5vw;
+		border-radius: 1vw;
+		margin-right: 10px;
+		vertical-align: middle;
+	}
+
+	#playerList {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		height: 57vh;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		padding: 0 2vw;
+	}
+
+	#playerList p,
+	.vote-option,
+	.result-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 5px;
+		width: 12vw;
+	}
+
+	.result-item,
+	.vote-option {
+		width: 15vw;
+		p {
+			font-size: 1vw;
+		}
+	}
+
+	#gamePhase {
+		display: flex;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
+		height: 5vh;
+	}
+
+	.player-points,
+	.vote-points,
+	.result-points {
+		font-size: 0.9em;
+		color: #666;
+	}
+
+	#username {
+		&Screen {
+			width: 40vw;
+			height: 80vh;
+			margin: 0 30vw;
+
+			div {
+				justify-content: unset !important;
+			}
+		}
+
+		&Input {
+			background-color: rgb(0, 0, 0, 0.2);
+			width: 15vw;
+			height: 8vh;
+			font-size: 3vh;
+			margin-top: 2vh;
+		}
+
+		&Submit {
+			background-color: rgb(0, 0, 0, 0.75);
+			width: 15vw;
+			height: 8vh;
+			font-size: 3vh;
+			color: white;
+			border-radius: 1.5vw;
+			margin-top: 6vh;
+		}
+
+		&Submit:hover {
+			background-color: rgb(0, 0, 0, 0.95);
+		}
+	}
+
+	#buttonContainer {
+		display: flex;
+		flex-direction: row;
+
+		button {
+			width: 5vw;
+			height: 5vw;
+			color: white;
+			background-color: rgb(0, 0, 0, 0.3);
+			border: 1px solid white;
+			font-size: 1.2vw;
+		}
+
+		button:hover {
+			background-color: rgb(0, 0, 0, 0.6);
+		}
+	}
+
+	#left-arrow {
+		border-top-left-radius: 1vw;
+		border-bottom-left-radius: 1vw;
+	}
+
+	#right-arrow {
+		border-top-right-radius: 1vw;
+		border-bottom-right-radius: 1vw;
+	}
+
+	textarea {
+		width: 100%;
+		height: 15vh;
+		font-size: 5vh;
+		text-align: center;
+	}
+
+	#questionPhase {
+		height: 90%;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		text-align: center;
-		width: 100%;
-		height: 100%;
-	}
-}
-
-.timer {
-	color: white;
-	height: 10%;
-	display: flex;
-	align-items: center;
-	text-align: center;
-	justify-content: center;
-
-	&warning {
-		color: red;
-		font-weight: bold;
-	}
-}
-
-#pfp {
-	width: 10vw;
-	height: 10vw;
-	border-radius: 10%;
-	border: 1px solid black;
-}
-
-#game {
-	&phase {
-		align-self: start;
 	}
 
-	&Outcome {
-		font-weight: bold;
-		margin: 10px 0;
-		padding: 10px;
-		background-color: #f0f0f0;
-		border-radius: 5px;
-	}
-
-	&Container {
+	#votingOptions {
 		display: flex;
 		flex-direction: row;
-		color: white;
-
-		&Left {
-			width: 30vw;
-			height: 70vh;
-			background-color: rgb(0, 0, 0, 0.75);
-			border: 1px solid white;
-			border-radius: 10px;
-		}
-
-		&Right {
-			width: 50vw;
-			height: 70vh;
-			background-color: rgb(0, 0, 0, 0.75);
-			border: 1px solid white;
-			border-radius: 10px;
-			margin-left: 10vw;
-		}
-	}
-}
-
-#description {
-	font-size: 1vw;
-	height: 5vh;
-	margin: 10px 0;
-	display: flex;
-	align-items: center;
-	text-align: center;
-	justify-content: center;
-}
-
-.arrows {
-	display: flex;
-	justify-content: space-between;
-	width: 100px;
-	margin-top: 20px;
-}
-
-.arrows button {
-	font-size: 1.5em;
-	padding: 10px;
-	cursor: pointer;
-}
-
-.vote-button {
-	margin: 5px;
-	padding: 5px 10px;
-}
-
-.player-pfp,
-.vote-pfp,
-.result-pfp {
-	width: 5vw;
-	height: 5vw;
-	border-radius: 1vw;
-	margin-right: 10px;
-	vertical-align: middle;
-}
-
-#playerList {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	height: 57vh;
-	overflow-x: hidden;
-    overflow-y: scroll;
-	padding: 0 2vw;
-}
-
-#playerList p,
-.vote-option,
-.result-item {
-	display: flex;
-	align-items: center;
-	margin-bottom: 5px;
-	width: 13vw;
-}
-
-.result-item, .vote-option {
-	width: 15vw;
-}
-
-#gamePhase {
-	display: flex;
-	align-items: center;
-	text-align: center;
-	justify-content: center;
-    height: 5vh;
-}
-
-.player-points,
-.vote-points,
-.result-points {
-	font-size: 0.9em;
-	color: #666;
-}
-
-#username {
-	&Screen {
-		width: 40vw;
-		height: 80vh;
-		margin: 0 30vw;
-
-		div {
-			justify-content: unset !important;
-		}
+		overflow-y: scroll;
+		flex-wrap: wrap;
+		padding: 0 2vw;
 	}
 
-	&Input {
-		background-color: rgb(0, 0, 0, 0.2);
+	#submitAnswer {
 		width: 15vw;
-		height: 8vh;
-		font-size: 3vh;
-		margin-top: 2vh;
-	}
-
-	&Submit {
-		background-color: rgb(0, 0, 0, 0.75);
-		width: 15vw;
-		height: 8vh;
-		font-size: 3vh;
-		color: white;
-		border-radius: 1.5vw;
-		margin-top: 6vh;
-	}
-
-	&Submit:hover {
-		background-color: rgb(0, 0, 0, 0.95);
-	}
-}
-
-#buttonContainer {
-	display: flex;
-	flex-direction: row;
-
-	button {
-		width: 5vw;
 		height: 5vw;
 		color: white;
 		background-color: rgb(0, 0, 0, 0.3);
 		border: 1px solid white;
 		font-size: 1.2vw;
+		border-radius: 20px;
+		margin-top: 5vh;
 	}
 
-	button:hover {
+	#submitAnswer:hover {
 		background-color: rgb(0, 0, 0, 0.6);
 	}
+
+	#resultsPhase {
+		display: flex;
+		height: 65vh;
+		flex-direction: column;
+	}
+
+	#voteResults {
+		height: 35vh;
+		padding: 0 2vw;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		overflow-y: scroll;
+	}
+
+	#impostorReveal,
+	#revealQuestion {
+		height: 5vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
 }
 
-#left-arrow {
-	border-top-left-radius: 1vw;
-	border-bottom-left-radius: 1vw;
-}
+@media (max-width: 767px) {
+	h1 {
+		text-align: center;
+		height: 20vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 5vh;
+		color: white;
+		text-shadow: 4px 4px 4px black;
+	}
 
-#right-arrow {
-	border-top-right-radius: 1vw;
-	border-bottom-right-radius: 1vw;
-}
+	h2 {
+		text-align: center;
+		font-size: 2vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 5vh;
+	}
 
-textarea {
-	width: 100%;
-    height: 15vh;
-    font-size: 5vh;
-    text-align: center;
-}
+	.hidden {
+		display: none !important;
+	}
 
-#questionPhase {
-	height: 90%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
+	.flex {
+		&row {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			width: 100%;
+			height: 100%;
+		}
 
-#votingOptions {
-	display: flex;
-	flex-direction: row;
-	overflow-y: scroll;
-	flex-wrap: wrap;
-    padding: 0 2vw;
-}
+		&column {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			width: 100%;
+			height: 100%;
+		}
+	}
 
-#submitAnswer {
-	width: 15vw;
-	height: 5vw;
-	color: white;
-	background-color: rgb(0, 0, 0, 0.3);
-	border: 1px solid white;
-	font-size: 1.2vw;
-    border-radius: 20px;
-    margin-top: 5vh;
-}
+	.timer {
+		color: white;
+		height: 10%;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
 
-#submitAnswer:hover {
-	background-color: rgb(0, 0, 0, 0.6);
-}
+		&warning {
+			color: red;
+			font-weight: bold;
+		}
+	}
 
-#resultsPhase {
-	display: flex;
-	height: 65vh;
-	flex-direction: column;
-}
+	#pfp {
+		width: 40vw;
+		height: 40vw;
+		border-radius: 10%;
+		border: 1px solid black;
+	}
 
-#voteResults {
-	height: 45vh;
-	padding: 0 2vw;
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-    overflow-y: scroll;
-}
+	#game {
+		&phase {
+			align-self: start;
+		}
 
-#impostorReveal,
-#revealQuestion {
-	height: 5vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
+		&Outcome {
+			font-weight: bold;
+			margin: 10px 0;
+			padding: 10px;
+			background-color: #f0f0f0;
+			border-radius: 5px;
+		}
+
+		&Container {
+			display: flex;
+			flex-direction: row;
+			color: white;
+
+			&Left {
+				width: 30vw;
+				height: 70vh;
+				background-color: rgb(0, 0, 0, 0.75);
+				border: 1px solid white;
+				border-radius: 10px;
+			}
+
+			&Right {
+				width: 50vw;
+				height: 70vh;
+				background-color: rgb(0, 0, 0, 0.75);
+				border: 1px solid white;
+				border-radius: 10px;
+				margin-left: 10vw;
+			}
+		}
+	}
+
+	#description {
+		font-size: 5vw;
+		height: 5vh;
+		margin: 10px 0;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
+	}
+
+	.arrows {
+		display: flex;
+		justify-content: space-between;
+		width: 100px;
+		margin-top: 20px;
+	}
+
+	.arrows button {
+		font-size: 1.5em;
+		padding: 10px;
+		cursor: pointer;
+	}
+
+	.vote-button {
+		margin: 5px;
+		padding: 5px 10px;
+	}
+
+	.player-pfp,
+	.vote-pfp,
+	.result-pfp {
+		width: 5vw;
+		height: 5vw;
+		border-radius: 1vw;
+		margin-right: 10px;
+		vertical-align: middle;
+	}
+
+	#playerList {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		height: 57vh;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		padding: 0 2vw;
+	}
+
+	#playerList p,
+	.vote-option,
+	.result-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 5px;
+		width: 12vw;
+	}
+
+    #playerList p {
+        width: 30vw;
+    }
+
+	.result-item,
+	.vote-option {
+		width: 45vw;
+        height: 8vh;
+		p {
+			font-size: 1vw;
+		}
+	}
+
+	#gamePhase {
+		display: flex;
+		align-items: center;
+		text-align: center;
+		justify-content: center;
+		height: 5vh;
+	}
+
+	.player-points,
+	.vote-points,
+	.result-points {
+		font-size: 0.9em;
+		color: #666;
+	}
+
+	#username {
+		&Screen {
+			width: 100vw;
+			height: 80vh;
+
+			div {
+				justify-content: unset !important;
+			}
+		}
+
+		&Input {
+			background-color: rgb(0, 0, 0, 0.2);
+			width: 50vw;
+			height: 8vh;
+			font-size: 3vh;
+			margin-top: 2vh;
+		}
+
+		&Submit {
+			background-color: rgb(0, 0, 0, 0.75);
+			width: 50vw;
+			height: 8vh;
+			font-size: 3vh;
+			color: white;
+			border-radius: 1.5vw;
+			margin-top: 6vh;
+		}
+
+		&Submit:hover {
+			background-color: rgb(0, 0, 0, 0.95);
+		}
+	}
+
+	#buttonContainer {
+		display: flex;
+		flex-direction: row;
+
+		button {
+			width: 10vw;
+			height: 10vw;
+			color: white;
+			background-color: rgb(0, 0, 0, 0.3);
+			border: 1px solid white;
+			font-size: 4vw;
+		}
+
+		button:hover {
+			background-color: rgb(0, 0, 0, 0.6);
+		}
+	}
+
+	#left-arrow {
+		border-top-left-radius: 1vw;
+		border-bottom-left-radius: 1vw;
+	}
+
+	#right-arrow {
+		border-top-right-radius: 1vw;
+		border-bottom-right-radius: 1vw;
+	}
+
+	textarea {
+		width: 100%;
+		height: 15vh;
+		font-size: 5vh;
+		text-align: center;
+	}
+
+	#questionPhase {
+		height: 90%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#votingOptions {
+		display: flex;
+		flex-direction: row;
+		overflow-y: scroll;
+		flex-wrap: wrap;
+		padding: 0 2vw;
+	}
+
+	#submitAnswer {
+		width: 40vw;
+		height: 5vh;
+		color: white;
+		background-color: rgb(0, 0, 0, 0.3);
+		border: 1px solid white;
+		font-size: 4vw;
+		border-radius: 20px;
+		margin-top: 5vh;
+	}
+
+	#submitAnswer:hover {
+		background-color: rgb(0, 0, 0, 0.6);
+	}
+
+	#resultsPhase {
+		display: flex;
+		height: 65vh;
+		flex-direction: column;
+	}
+
+	#voteResults {
+		height: 35vh;
+		padding: 0 2vw;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		overflow-y: scroll;
+	}
+
+	#impostorReveal,
+	#revealQuestion {
+		height: 5vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
 }
