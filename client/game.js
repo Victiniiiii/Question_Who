@@ -176,13 +176,8 @@ socket.onmessage = (event) => {
 
 			const resultText = document.createElement("p");
 			resultText.textContent = `${result.username}: ${result.votes} votes`;
+            
 			resultInfo.appendChild(resultText);
-
-			const resultPoints = document.createElement("p");
-			resultPoints.textContent = `${result.points} points`;
-			resultPoints.classList.add("result-points");
-			resultInfo.appendChild(resultPoints);
-
 			resultItem.appendChild(resultInfo);
 			voteResults.appendChild(resultItem);
 		});
