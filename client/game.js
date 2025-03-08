@@ -84,7 +84,7 @@ socket.onmessage = (event) => {
 			playerInfo.appendChild(usernameSpan);
 
 			const pointsSpan = document.createElement("span");
-			pointsSpan.textContent = `${player.points} ${translations[currentLanguage][points]}`;
+			pointsSpan.textContent = `${player.points} ${translations[currentLanguage]["points"]}`;
 			pointsSpan.classList.add("player-points");
 			playerInfo.appendChild(pointsSpan);
 
@@ -93,7 +93,7 @@ socket.onmessage = (event) => {
 		});
 	} else if (data.type === "question") {
 		updatePhase("question");
-		question.textContent = `${translations[currentLanguage][question]}: ${data.question}`;
+		question.textContent = `${translations[currentLanguage]["question"]}: ${data.question}`;
 		answer.disabled = false;
 		submitAnswer.disabled = false;
 		answer.value = "";
@@ -103,7 +103,7 @@ socket.onmessage = (event) => {
 
 		const revealQuestionDiv = document.getElementById("revealQuestion");
 		if (revealQuestionDiv) {
-			revealQuestionDiv.textContent = `${translations[currentLanguage][question]}: ${data.commonQuestion}`;
+			revealQuestionDiv.textContent = `${translations[currentLanguage]["question"]}: ${data.commonQuestion}`;
 			revealQuestionDiv.classList.add("revealed-question");
 		}
 
@@ -124,7 +124,7 @@ socket.onmessage = (event) => {
 				voteInfo.classList.add("flexcolumn");
 
 				const voteButton = document.createElement("button");
-				voteButton.textContent = `${player.username}: ${player.answer || translations[currentLanguage][no_answer]}`;
+				voteButton.textContent = `${player.username}: ${player.answer || translations[currentLanguage]["no_answer"]}`;
 				voteButton.classList.add("vote-button");
 				voteButton.addEventListener("click", () => {
 					socket.send(
@@ -143,7 +143,7 @@ socket.onmessage = (event) => {
 			}
 		});
 	} else if (data.type === "time_remaining") {
-		timer.textContent = `${translations[currentLanguage][remaining_time]}: ${data.remainingTime} ${translations[currentLanguage][seconds]}`;
+		timer.textContent = `${translations[currentLanguage]["remaining_time"]}: ${data.remainingTime} ${translations[currentLanguage]["seconds"]}`;
 		if (data.remainingTime <= 10) {
 			timer.classList.add("timerwarning");
 		} else {
@@ -169,14 +169,14 @@ socket.onmessage = (event) => {
 			resultInfo.classList.add("flexcolumn");
 
 			const resultText = document.createElement("p");
-			resultText.textContent = `${result.username}: ${result.votes} ${translations[currentLanguage][votes]}`;
+			resultText.textContent = `${result.username}: ${result.votes} ${translations[currentLanguage]["votes"]}`;
 
 			resultInfo.appendChild(resultText);
 			resultItem.appendChild(resultInfo);
 			voteResults.appendChild(resultItem);
 		});
 
-		impostorReveal.textContent = `${translations[currentLanguage][impostor]}: ${data.impostor}`;
+		impostorReveal.textContent = `${translations[currentLanguage]["impostor"]}: ${data.impostor}`;
 	}
 };
 
