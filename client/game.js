@@ -22,8 +22,8 @@ document.getElementById("usernameSubmit").addEventListener("click", () => {
 			JSON.stringify({
 				type: "set_username",
 				username,
-				profileImage: currentPfpIndex,
-				profileDesc: descriptions[currentPfpIndex - 1],
+				profileImage: pfpNo,
+				profileDesc: descriptions[pfpNo - 1],
 			})
 		);
 
@@ -213,24 +213,23 @@ function updatePhase(newPhase) {
 
 const descriptions = ["Kedi", "Tahta bloğu", "Tarator", "Ağaç", "Havalı H Harfi", "Kolonya", "Uganda", "👌", "Sasalı", "😉", "😔", "Navy Seal", "Kağıt Uçak", "Sandviç", "İzban", "Erasmus", "Veri Tabanı"];
 
-let currentPfpIndex = 1;
+let pfpNo = 1;
 const pfpCount = descriptions.length;
 const pfpImage = document.getElementById("pfp");
-const description = document.getElementById("description");
 
 function updatePfp() {
-	pfpImage.src = `pfp${currentPfpIndex}.png`;
-	pfpImage.alt = `pfp${currentPfpIndex}`;
-	description.textContent = descriptions[currentPfpIndex - 1];
+	pfpImage.src = `pfp${pfpNo}.png`;
+	pfpImage.alt = `pfp${pfpNo}`;
+	document.getElementById("description").textContent = descriptions[pfpNo - 1];
 }
 
 document.getElementById("left-arrow").addEventListener("click", () => {
-	currentPfpIndex = currentPfpIndex === 1 ? pfpCount : currentPfpIndex - 1;
+	pfpNo = pfpNo === 1 ? pfpCount : pfpNo - 1;
 	updatePfp();
 });
 
 document.getElementById("right-arrow").addEventListener("click", () => {
-	currentPfpIndex = currentPfpIndex === pfpCount ? 1 : currentPfpIndex + 1;
+	pfpNo = pfpNo === pfpCount ? 1 : pfpNo + 1;
 	updatePfp();
 });
 
