@@ -4,25 +4,18 @@ let currentPhase = "waiting";
 let currentLanguage = localStorage.getItem("language") || "tr";
 let translations = {};
 
-const usernameScreen = document.getElementById("usernameScreen");
-const usernameInput = document.getElementById("usernameInput");
-const submitUsername = document.getElementById("usernameSubmit");
-const gameContainer = document.getElementById("gameContainer");
-const question = document.getElementById("question");
 const answer = document.getElementById("answer");
 const submitAnswer = document.getElementById("submitAnswer");
 const playerList = document.getElementById("playerList");
 const timer = document.getElementById("timer");
-const gamePhase = document.getElementById("gamePhase");
 const questionPhase = document.getElementById("questionPhase");
 const votingPhase = document.getElementById("votingPhase");
 const votingOptions = document.getElementById("votingOptions");
 const resultsPhase = document.getElementById("resultsPhase");
 const voteResults = document.getElementById("voteResults");
-const impostorReveal = document.getElementById("impostorReveal");
 
-submitUsername.addEventListener("click", () => {
-	const username = usernameInput.value.trim();
+document.getElementById("usernameSubmit").addEventListener("click", () => {
+	const username = document.getElementById("usernameInput").value.trim();
 	if (username.length > 0 && username.length < 15) {
 		myUsername = username;
 		socket.send(
@@ -34,8 +27,8 @@ submitUsername.addEventListener("click", () => {
 			})
 		);
 
-		usernameScreen.classList.add("hidden");
-		gameContainer.classList.remove("hidden");
+		document.getElementById("usernameScreen").classList.add("hidden");
+		document.getElementById("gameContainer").classList.remove("hidden");
 	} else {
 		alert("Username not found or too short or too long (Limit = 15).");
 	}
@@ -52,13 +45,8 @@ submitAnswer.addEventListener("click", () => {
 	answer.disabled = true;
 });
 
-socket.onopen = () => {
-	console.log("Connected to game server!");
-};
-
 socket.onmessage = (event) => {
 	const data = JSON.parse(event.data);
-	console.log("Received from server:", data);
 
 	if (data.type === "update_player_list") {
 		playerList.innerHTML = "";
@@ -93,7 +81,7 @@ socket.onmessage = (event) => {
 		});
 	} else if (data.type === "question") {
 		updatePhase("question");
-		question.textContent = `${translations[currentLanguage]["question"]}: ${data.question}`;
+		document.getElementById("question").textContent = `${translations[currentLanguage]["question"]}: ${data.question}`;
 		answer.disabled = false;
 		submitAnswer.disabled = false;
 		answer.value = "";
@@ -176,7 +164,7 @@ socket.onmessage = (event) => {
 			voteResults.appendChild(resultItem);
 		});
 
-		impostorReveal.textContent = `${translations[currentLanguage]["impostor"]}: ${data.impostor}`;
+		document.getElementById("impostorReveal").textContent = `${translations[currentLanguage]["impostor"]}: ${data.impostor}`;
 	}
 };
 
@@ -216,7 +204,7 @@ function updatePhase(newPhase) {
 	votingPhase.classList.add("hidden");
 	resultsPhase.classList.add("hidden");
 
-	gamePhase.textContent = translations[currentLanguage][`${newPhase}_phase`];
+	document.getElementById("gamePhase").textContent = translations[currentLanguage][`${newPhase}_phase`];
 
 	if (newPhase === "question") questionPhase.classList.remove("hidden");
 	else if (newPhase === "voting") votingPhase.classList.remove("hidden");
@@ -268,7 +256,6 @@ function startGame(commonQuestion, impostorQuestion) {
 			impostorQuestion: impostorQuestion,
 		})
 	);
-	console.log("Sent start game command!");
 }
 
 function kickPlayer(username) {
@@ -279,15 +266,13 @@ function kickPlayer(username) {
 			username: username,
 		})
 	);
-	console.log(`Sent kick command for player: ${username}`);
 }
 
 window.startGame = startGame;
 window.kickPlayer = kickPlayer;
 
 document.addEventListener("DOMContentLoaded", async function () {
-	console.log(`startGame("Question 1","Question 2") --> Starts the game with these two questions`);
-	console.log(`kickPlayer("username") --> Kicks the player with that username`);
+	console.log(`startGame("Question 1", "Question 2"), kickPlayer("username")`);
     
     try {
         const response = await fetch("translations.json");
