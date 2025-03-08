@@ -7,14 +7,49 @@
 		<link rel="stylesheet" href="style.css" />
 		<link rel="icon" href="pfp3.png" type="image/png" />
 	</head>
+	<style>
+		#languageContainer {
+			position: fixed;
+			top: 10px;
+			right: 10px;
+			padding: 10px;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+		}
+		#languageSwitcher {
+			padding: 5px;
+			font-size: 16px;
+            background-color: rgb(0,0,0,0.7);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            margin-left: 5px;
+		}
+		.flag {
+			width: 20px;
+			height: 15px;
+		}
+	</style>
 	<body>
-		<h1>Soru Kimde</h1>
-
+		<h1>
+			<p id="game_name"></p>
+			<div id="languageContainer">
+				<img class="flag" src="https://flagcdn.com/w40/tr.png" alt="Turkish Flag" />
+				<img class="flag" src="https://flagcdn.com/w40/gb.png" alt="English Flag" />
+				<img class="flag" src="https://flagcdn.com/w40/fr.png" alt="French Flag" />
+				<select id="languageSwitcher">
+					<option value="tr">Türkçe</option>
+					<option value="en">English</option>
+					<option value="fr">Français</option>
+				</select>
+			</div>
+		</h1>
 		<div id="usernameScreen" class="flexrow">
 			<div class="flexcolumn">
-				<h2>Kullanıcı ismi gir:</h2>
+				<h2 id="enter_username"></h2>
 				<input type="text" id="usernameInput" placeholder="Kullanıcı ismi" />
-				<button id="usernameSubmit">Katıl</button>
+				<button id="usernameSubmit"></button>
 			</div>
 			<div class="flexcolumn">
 				<img id="pfp" src="pfp1.png" alt="pfp1" />
@@ -25,27 +60,24 @@
 				</div>
 			</div>
 		</div>
-
 		<div id="gameContainer" class="hidden">
 			<div id="gameContainerLeft">
-				<h2>Oyuncular</h2>
+				<h2 id="players"></h2>
 				<div id="playerList"></div>
 			</div>
 			<div id="gameContainerRight">
-				<div id="gamePhase">Oyunun başlaması bekleniyor...</div>
+				<div id="gamePhase"></div>
 				<div id="timer" class="timer"></div>
 				<div id="questionPhase" class="hidden">
-					<p id="question">Soru bekleniyor...</p>
+					<p id="question"></p>
 					<textarea id="answer" placeholder="Cevabı buraya yaz"></textarea>
 					<button id="submitAnswer">Cevabı yolla</button>
 				</div>
-
 				<div id="votingPhase" class="hidden">
-					<h2>Sorusunun farklı olduğunu düşündüğün kişiye tıkla:</h2>
+					<h2 id="voteForImpostor"></h2>
 					<div id="revealQuestion"></div>
 					<div id="votingOptions"></div>
 				</div>
-
 				<div id="resultsPhase" class="hidden">
 					<p id="impostorReveal"></p>
 					<div id="voteResults"></div>
@@ -53,6 +85,6 @@
 			</div>
 		</div>
 
-		<script src="game.js"></script>
+		<script src="game.js" defer></script>
 	</body>
 </html>

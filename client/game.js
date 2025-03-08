@@ -1,6 +1,8 @@
 const socket = new WebSocket(`wss://${window.location.host}`);
 let myUsername = null;
 let currentPhase = "waiting";
+let currentLanguage = localStorage.getItem("language") || "tr";
+let translations = {};
 
 const usernameScreen = document.getElementById("usernameScreen");
 const usernameInput = document.getElementById("usernameInput");
@@ -37,6 +39,10 @@ submitUsername.addEventListener("click", () => {
 	} else {
 		alert("Username not found or too short or too long (Limit = 15).");
 	}
+});
+
+document.getElementById("languageSwitcher").addEventListener("change", function () {
+	changeLanguage(this.value);
 });
 
 submitAnswer.addEventListener("click", () => {
@@ -78,7 +84,7 @@ socket.onmessage = (event) => {
 			playerInfo.appendChild(usernameSpan);
 
 			const pointsSpan = document.createElement("span");
-			pointsSpan.textContent = `${player.points} points`;
+			pointsSpan.textContent = `${player.points} ${translations[currentLanguage][points]}`;
 			pointsSpan.classList.add("player-points");
 			playerInfo.appendChild(pointsSpan);
 
@@ -87,7 +93,7 @@ socket.onmessage = (event) => {
 		});
 	} else if (data.type === "question") {
 		updatePhase("question");
-		question.textContent = `Sorun: ${data.question}`;
+		question.textContent = `${translations[currentLanguage][question]}: ${data.question}`;
 		answer.disabled = false;
 		submitAnswer.disabled = false;
 		answer.value = "";
@@ -97,7 +103,7 @@ socket.onmessage = (event) => {
 
 		const revealQuestionDiv = document.getElementById("revealQuestion");
 		if (revealQuestionDiv) {
-			revealQuestionDiv.textContent = `Soru: ${data.commonQuestion}`;
+			revealQuestionDiv.textContent = `${translations[currentLanguage][question]}: ${data.commonQuestion}`;
 			revealQuestionDiv.classList.add("revealed-question");
 		}
 
@@ -118,7 +124,7 @@ socket.onmessage = (event) => {
 				voteInfo.classList.add("flexcolumn");
 
 				const voteButton = document.createElement("button");
-				voteButton.textContent = `${player.username}: ${player.answer || "[No answer]"}`;
+				voteButton.textContent = `${player.username}: ${player.answer || translations[currentLanguage][no_answer]}`;
 				voteButton.classList.add("vote-button");
 				voteButton.addEventListener("click", () => {
 					socket.send(
@@ -137,7 +143,7 @@ socket.onmessage = (event) => {
 			}
 		});
 	} else if (data.type === "time_remaining") {
-		timer.textContent = `Kalan süre: ${data.remainingTime} saniye`;
+		timer.textContent = `${translations[currentLanguage][remaining_time]}: ${data.remainingTime} ${translations[currentLanguage][seconds]}`;
 		if (data.remainingTime <= 10) {
 			timer.classList.add("timerwarning");
 		} else {
@@ -163,16 +169,45 @@ socket.onmessage = (event) => {
 			resultInfo.classList.add("flexcolumn");
 
 			const resultText = document.createElement("p");
-			resultText.textContent = `${result.username}: ${result.votes} oy`;
+			resultText.textContent = `${result.username}: ${result.votes} ${translations[currentLanguage][votes]}`;
 
 			resultInfo.appendChild(resultText);
 			resultItem.appendChild(resultInfo);
 			voteResults.appendChild(resultItem);
 		});
 
-		impostorReveal.textContent = `Casus kişi: ${data.impostor}`;
+		impostorReveal.textContent = `${translations[currentLanguage][impostor]}: ${data.impostor}`;
 	}
 };
+
+function changeLanguage(lang) {
+	document.body.querySelectorAll("*").forEach((el) => {
+		if (el.childNodes.length === 1 && el.childNodes[0].nodeType === 3) {
+			const text = el.textContent.trim();
+			for (const key in translations[currentLanguage]) {
+				if (translations[currentLanguage][key] === text) {
+					el.textContent = translations[lang][key];
+					break;
+				}
+			}
+		}
+	});
+    
+    document.getElementById("game_name").textContent = translations[lang]["game_name"];
+    document.getElementById("enter_username").textContent = translations[lang]["enter_username"];
+    document.getElementById("usernameSubmit").textContent = translations[lang]["join"];
+    document.getElementById("players").textContent = translations[lang]["players"];
+    document.getElementById("gamePhase").textContent = translations[lang]["waiting_game"];
+    document.getElementById("question").textContent = translations[lang]["question"];
+    document.getElementById("submitAnswer").textContent = translations[lang]["submit_answer"];
+    document.getElementById("voteForImpostor").textContent = translations[lang]["click_on_spy"];
+	document.getElementById("usernameInput").placeholder = translations[lang]["placeholder1"];
+	document.getElementById("answer").placeholder = translations[lang]["placeholder2"];
+
+	currentLanguage = lang;
+	localStorage.setItem("language", lang);
+	updatePhase(currentPhase);
+}
 
 function updatePhase(newPhase) {
 	currentPhase = newPhase;
@@ -181,24 +216,16 @@ function updatePhase(newPhase) {
 	votingPhase.classList.add("hidden");
 	resultsPhase.classList.add("hidden");
 
-	if (newPhase === "question") {
-		gamePhase.textContent = "Soruyu cevapla!";
-		questionPhase.classList.remove("hidden");
-	} else if (newPhase === "voting") {
-		gamePhase.textContent = "Casusa oy ver!";
-		votingPhase.classList.remove("hidden");
-	} else if (newPhase === "results") {
-		gamePhase.textContent = "Sonuçlar";
-		resultsPhase.classList.remove("hidden");
-	} else {
-		gamePhase.textContent = "Oyuncular bekleniyor...";
-	}
-}
+	gamePhase.textContent = translations[currentLanguage][`${newPhase}_phase`];
 
-let currentPfpIndex = 1;
+	if (newPhase === "question") questionPhase.classList.remove("hidden");
+	else if (newPhase === "voting") votingPhase.classList.remove("hidden");
+	else if (newPhase === "results") resultsPhase.classList.remove("hidden");
+}
 
 const descriptions = ["Kedi", "Tahta bloğu", "Tarator", "Ağaç", "Havalı H Harfi", "Kolonya", "Uganda", "👌", "Sasalı", "😉", "😔", "Navy Seal", "Kağıt Uçak", "Sandviç", "İzban", "Erasmus", "Veri Tabanı"];
 
+let currentPfpIndex = 1;
 const pfpCount = descriptions.length;
 const pfpImage = document.getElementById("pfp");
 const description = document.getElementById("description");
@@ -255,8 +282,19 @@ function kickPlayer(username) {
 	console.log(`Sent kick command for player: ${username}`);
 }
 
-console.log(`startGame("Question 1","Question 2") --> Starts the game with these two questions`);
-console.log(`kickPlayer("username") --> Kicks the player with that username`);
-
 window.startGame = startGame;
 window.kickPlayer = kickPlayer;
+
+document.addEventListener("DOMContentLoaded", async function () {
+	console.log(`startGame("Question 1","Question 2") --> Starts the game with these two questions`);
+	console.log(`kickPlayer("username") --> Kicks the player with that username`);
+    
+    try {
+        const response = await fetch("translations.json");
+        translations = await response.json();
+        changeLanguage(currentLanguage);
+        document.getElementById("languageSwitcher").value = currentLanguage;
+    } catch (error) {
+        console.error("Failed to load translations:", error);
+    }
+});
