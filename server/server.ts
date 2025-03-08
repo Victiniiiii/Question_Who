@@ -41,6 +41,7 @@ const server = http.createServer((req, res) => {
 		"/": { path: path.join(__dirname, "../client/index.html"), contentType: "text/html" },
 		"/style.css": { path: path.join(__dirname, "../client/style.css"), contentType: "text/css" },
 		"/game.js": { path: path.join(__dirname, "../client/game.js"), contentType: "application/javascript" },
+		"/translations.json": { path: path.join(__dirname, "../client/translations.json"), contentType: "application/json" },
 	};
 
 	if (fileMap[req.url || ""]) {
