@@ -55,7 +55,7 @@ socket.onmessage = (event) => {
 
 			if (player.profileImage) {
 				const img = document.createElement("img");
-				img.src = `pfp${player.profileImage}.png`;
+				img.src = `images/pfp${player.profileImage}.png`;
 				img.alt = player.profileDesc || `Profile ${player.profileImage}`;
 				img.classList.add("player-pfp");
 				listItem.appendChild(img);
@@ -102,7 +102,7 @@ socket.onmessage = (event) => {
 
 				if (player.profileImage) {
 					const img = document.createElement("img");
-					img.src = `pfp${player.profileImage}.png`;
+					img.src = `images/pfp${player.profileImage}.png`;
 					img.alt = player.profileDesc || `Profile ${player.profileImage}`;
 					img.classList.add("vote-pfp");
 					voteContainer.appendChild(img);
@@ -147,7 +147,7 @@ socket.onmessage = (event) => {
 
 			if (result.profileImage) {
 				const img = document.createElement("img");
-				img.src = `pfp${result.profileImage}.png`;
+				img.src = `images/pfp${result.profileImage}.png`;
 				img.alt = result.profileDesc || `Profile ${result.profileImage}`;
 				img.classList.add("result-pfp");
 				resultItem.appendChild(img);
@@ -218,8 +218,8 @@ const pfpCount = descriptions.length;
 const pfpImage = document.getElementById("pfp");
 
 function updatePfp() {
-	pfpImage.src = `pfp${pfpNo}.png`;
-	pfpImage.alt = `pfp${pfpNo}`;
+	pfpImage.src = `images/pfp${pfpNo}.png`;
+	pfpImage.alt = `images/pfp${pfpNo}`;
 	document.getElementById("description").textContent = descriptions[pfpNo - 1];
 }
 
